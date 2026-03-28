@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-SampahKu AMCM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root { --primary-blue: #2980b9; --dark-blue: #2c3e50; --red-warning: #ff0000; }
+    
+    body { 
+      background-image: url('https://freedomdigital.biz.id/gambarbebas/20260328-102840_GATE%20AMC%201%20&%20AMC%202.png?auto=format&fit=crop&w=1920&q=80'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      font-family: 'Segoe UI', sans-serif; 
+      overflow-x: hidden; 
+    }
+    
+    #login-page { 
+      min-height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 15px; 
+      background: rgba(0, 0, 0, 0.2); 
+    }
+
+    .login-box { 
+      max-width: 400px; 
+      width: 100%; 
+      padding: 35px 25px; 
+      text-align: center; 
+      background: rgba(255, 255, 255, 0.85); 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px); 
+      border-radius: 25px; 
+      border: 1px solid rgba(255, 255, 255, 0.6); 
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
+    }
+    
+    @keyframes denyutBencana {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(255,0,0,0.5); }
+      50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,0,0,1); }
+      100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,0,0,0.5); }
+    }
+    .warning-box { background-color: var(--red-warning); color: white; border-radius: 10px; border: 4px solid black; padding: 15px; font-weight: bold; margin-bottom: 20px; display: none; }
+    .warning-denyut { animation: denyutBencana 0.6s infinite; }
+    
+    #topbar { 
+      background: rgba(41, 128, 185, 0.9); 
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: white; 
+      padding: 10px 20px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      position: sticky; 
+      top: 0; 
+      z-index: 1020; 
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .user-profile-top { display: flex; align-items: center; gap: 10px; }
+    .user-profile-top img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white; background-color: white;}
+    
+    .wrapper { display: flex; min-height: calc(100vh - 60px); position: relative; }
+    
+    #sidebar { width: 250px; background-color: rgba(44, 62, 80, 0.95); backdrop-filter: blur(5px); color: white; padding-top: 20px; transition: 0.3s; z-index: 1010; }
+    .sidebar-user { text-align: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;}
+    .sidebar-user img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; border: 3px solid var(--primary-blue); object-fit: cover; background-color: white;}
+    .nav-link { color: #bdc3c7; padding: 12px 20px; border-radius: 0; cursor: pointer;}
+    .nav-link:hover, .nav-link.active { background-color: rgba(0,0,0,0.3); color: white; border-left: 4px solid var(--primary-blue); }
+    
+    #content { flex: 1; padding: 20px; overflow-y: auto; width: 100%; }
+    
+    .summary-card { color: white; border-radius: 12px; padding: 20px; position: relative; overflow: hidden; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.2); }
+    .card-blue { background: linear-gradient(135deg, #00c0ef, #0097bc); } 
+    .card-green { background: linear-gradient(135deg, #00a65a, #007a42); } 
+    .card-red { background: linear-gradient(135deg, #dd4b39, #b13c2e); }
+    .summary-card h3 { font-size: 32px; font-weight: bold; margin: 0; }
+    .summary-card p { margin-bottom: 0; font-size: 14px; opacity: 0.9; }
+    .summary-card i { position: absolute; right: 15px; top: 15px; font-size: 60px; color: rgba(0,0,0,0.15); }
+    
+    #loader { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); backdrop-filter: blur(5px); z-index: 9999; justify-content: center; align-items: center; }
+
+    #sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1005; }
+    @media (max-width: 768px) {
+      #sidebar { position: fixed; left: -250px; height: 100%; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
+      #sidebar.show { left: 0; }
+      #sidebar-overlay.show { display: block; }
+      #content { padding: 15px; }
+      .table-responsive { width: 100%; overflow-x: auto; white-space: nowrap; }
+    }
+
+    .table-responsive::-webkit-scrollbar { height: 8px; }
+    .table-responsive::-webkit-scrollbar-thumb { background-color: #bdc3c7; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+  <div id="loader"><div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;"></div></div>
+
+  <!-- HALAMAN LOGIN -->
+  <div id="login-page">
+    <div class="login-box">
+      <div id="login-warning" class="warning-box">⚠️ WARNING !!! 😠<br /><br />HEH BRO, SAMPEAN WARGA AHSANA MOJOSARI, DUDU TOh??<br />Lek Pancen Warga Anyar Ahsana Mojosari, Kudu Ijin Sek Karo Seng Mbaukrêkso AMC 1 B-20?</div>
+      
+      <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" alt="Logo" class="mb-3" style="width: 100%; max-width: 250px; height: auto; background-color: transparent; border-radius: 15px; padding: 0px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));" />
+      <h3 class="fw-bold mt-2" style="color: #2980b9;">SampahKu</h3>
+      <h5 class="mb-4" style="color: #34495e;">Paguyuban Warga AMCM</h5>
+      
+      <form id="formLogin" onsubmit="handleLogin(event); return false;">
+        <div class="mb-3"><input type="email" class="form-control form-control-lg bg-light" style="border-radius: 12px;" id="loginEmail" placeholder="Masukkan Email" oninput="matikanWarning()" required /></div>
+        <div class="mb-4"><input type="password" class="form-control form-control-lg bg-light" style="border-radius: 12px;" id="loginPassword" placeholder="Masukkan Password" oninput="matikanWarning()" required /></div>
+        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm" style="border-radius: 12px;">LOGIN KE SISTEM</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- APLIKASI UTAMA -->
+  <div id="app-page" style="display: none;">
+    <nav id="topbar">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-outline-light d-md-none me-2 border-0" onclick="toggleSidebar()"><i class="fas fa-bars fs-4"></i></button>
+        <div class="fw-bold fs-4 d-flex align-items-center">
+          <img src="https://freedomdigital.biz.id/gambarbebas/20260311-020158_SampahKu%20AMCM%2001.png" alt="Logo" class="me-2" style="height: 50px; width: auto; max-width: 250px; background-color: rgba(255,255,255,0.8); border-radius: 8px; padding: 4px;" />
+          <span class="d-none d-sm-inline">E-SampahKu</span>
+        </div>
+      </div>
+      <div class="user-profile-top">
+        <div id="topbar-notif-admin" class="position-relative me-3" style="display:none; cursor:pointer;" onclick="showMenu('validasi')" title="Ada antrean validasi!">
+          <i class="fas fa-bell fs-4 text-warning"></i>
+          <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle warning-denyut">
+            <span class="visually-hidden">Unread messages</span>
+          </span>
+        </div>
+        
+        <span class="d-none d-md-inline">Hai, <b id="topbarName">User</b></span>
+        <img id="topbarPhoto" src="" alt="User" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'" />
+        <button class="btn btn-sm btn-danger ms-2 fw-bold" style="border-radius: 8px;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span class="d-none d-sm-inline">Logout</span></button>
+      </div>
+    </nav>
+
+    <div class="wrapper">
+      <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+      
+      <aside id="sidebar">
+        <div class="sidebar-user">
+          <img id="sidePhoto" src="" alt="User" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'" />
+          <h6 class="mb-0 fw-bold" id="sideName">Nama User</h6>
+          <small class="text-warning fw-bold" id="sideRole">Role</small>
+        </div>
+        <div class="nav flex-column">
+          <a class="nav-link active" onclick="showMenu('dashboard')"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+          <a class="nav-link menu-warga" onclick="showMenu('profil')"><i class="fas fa-user-cog me-2"></i> Setting Profil</a>
+          <a class="nav-link menu-admin" style="display:none;" onclick="showMenu('validasi')"><i class="fas fa-check-circle me-2"></i> Validasi Iuran</a>
+          <a class="nav-link menu-admin" style="display:none;" onclick="showMenu('laporan')"><i class="fas fa-file-invoice-dollar me-2"></i> Rekap Iuran Warga</a>
+          
+          <!-- PERUBAHAN DI SINI: Data Warga sekarang pakai class 'menu-admin' agar Admin juga bisa melihat menunya -->
+          <a class="nav-link menu-admin" style="display:none;" onclick="showMenu('data_warga')"><i class="fas fa-users me-2"></i> Data Warga</a>
+          
+          <a class="nav-link menu-superadmin" style="display:none;" onclick="showMenu('pengaturan')"><i class="fas fa-cog me-2"></i> Pengaturan Sistem</a>
+        </div>
+      </aside>
+
+      <main id="content">
+        <div id="alert-pengingat" class="alert alert-danger fw-bold shadow-sm" style="display:none; border-radius: 12px; animation: denyutBencana 1.5s infinite;">
+          <i class="fas fa-bell me-2"></i> PENGUMUMAN: <span id="text-pengingat">Untuk Segera Menyelesaikan Pembayaran Iuran Sampah</span>
+        </div>
+
+        <!-- 1. DASHBOARD -->
+        <div id="menu-dashboard">
+          <div id="admin-dashboard-view" style="display:none;">
+            <div class="card shadow-sm border-0 mb-4 bg-white" style="border-radius: 15px; background: rgba(255,255,255,0.9) !important; backdrop-filter: blur(10px);">
+              <div class="card-body p-4">
+                <h4 class="mb-3 text-secondary border-bottom pb-2 fw-bold"><i class="fas fa-chart-line me-2"></i> Dashboard Admin</h4>
+                <div class="row g-3">
+                  <div class="col-12 col-md-4"><div class="summary-card card-blue"><h3 id="sum_masuk">0</h3><p>Total Pemasukan</p><i class="fas fa-chart-bar"></i></div></div>
+                  <div class="col-12 col-md-4"><div class="summary-card card-green"><h3 id="sum_lunas">0</h3><p>Lunas (Bulan)</p><i class="fas fa-check-circle"></i></div></div>
+                  <div class="col-12 col-md-4"><div class="summary-card card-red"><h3 id="sum_belum">0</h3><p>Menunggu ACC</p><i class="fas fa-times-circle"></i></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="warga-dashboard-view">
+            <div class="card shadow-sm border-0 mb-4" style="border-radius: 15px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);">
+              <div class="card-body text-center p-4">
+                <h5 class="text-secondary fw-bold mb-4 border-bottom pb-3"><i class="fas fa-user-circle me-2"></i> Tagihan Iuran Pribadi Anda (Sebagai Warga)</h5>
+                <div id="status-terkini-warga" class="w-100"></div>
+              </div>
+            </div>
+
+            <div class="accordion shadow-sm mb-4" id="accordionIuran">
+              <div class="accordion-item border-0" style="border-radius: 15px; overflow: hidden; background: rgba(255,255,255,0.95);">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed fw-bold bg-warning text-dark p-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIuran">
+                    <i class="fas fa-calendar-check me-2"></i> Lihat Rincian Status 12 Bulan (Tahun Ini)
+                  </button>
+                </h2>
+                <div id="collapseIuran" class="accordion-collapse collapse" data-bs-parent="#accordionIuran">
+                  <div class="accordion-body p-4" style="background: rgba(248, 249, 250, 0.9);">
+                    <div class="row g-3" id="grid-iuran-warga"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. PROFIL -->
+        <div id="menu-profil" style="display:none;">
+          <div class="card shadow-lg border-0 mx-auto" style="max-width: 500px; border-radius: 15px; overflow: hidden;">
+            <div class="card-header bg-primary text-white fw-bold py-3"><i class="fas fa-user-edit me-2"></i> Edit Profil Akun</div>
+            <div class="card-body p-4" style="background: rgba(255,255,255,0.95);">
+              <form onsubmit="handleUpdateProfil(event); return false;">
+                <div class="mb-3"><label class="fw-bold text-muted small">Email Akun</label><input type="email" id="profEmail" class="form-control bg-light" required /></div>
+                
+                <div class="mb-3">
+                  <label class="fw-bold text-muted small">Nama Lengkap</label>
+                  <div class="input-group shadow-sm">
+                    <select id="profPanggilan" class="form-select bg-light fw-bold" style="max-width: 100px; border-right: none;">
+                      <option value="Bpk.">Bpk.</option>
+                      <option value="Ibu.">Ibu.</option>
+                    </select>
+                    <input type="text" id="profNama" class="form-control fw-bold bg-light" required />
+                  </div>
+                </div>
+
+                <div class="row mb-3 g-2">
+                  <div class="col-12 col-sm-6">
+                    <label class="fw-bold text-muted small">Blok Rumah</label>
+                    <select id="profBlok" class="form-select fw-bold border-primary shadow-sm bg-light" required>
+                      <option value="AMC 1">AMC 1</option>
+                      <option value="AMC 2">AMC 2</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <label class="fw-bold text-muted small">No Rumah</label>
+                    <input type="text" id="profNo" class="form-control bg-light" placeholder="Cth: 20" required />
+                  </div>
+                </div>
+
+                <div class="mb-3"><label class="fw-bold text-muted small">Nomor WhatsApp</label><input type="text" id="profWa" class="form-control bg-light" required /></div>
+                <div class="mb-3"><label class="fw-bold text-muted small">Ganti Password Baru (Opsional)</label><input type="password" id="profPass" class="form-control bg-light" placeholder="Kosongi jika tidak diganti" /></div>
+                <div class="mb-4"><label class="fw-bold text-muted small">Upload Foto Profil Baru (Maks 5MB)</label><input type="file" id="profFoto" class="form-control bg-light" accept="image/*" /></div>
+                <button type="submit" class="btn btn-success fw-bold w-100 shadow-sm py-2" style="border-radius: 10px;">Simpan Perubahan</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. VALIDASI ADMIN -->
+        <div id="menu-validasi" style="display:none;">
+          <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+            <div class="card-header bg-danger text-white fw-bold py-3"><i class="fas fa-check-circle me-2"></i> Antrean Validasi Iuran</div>
+            <div class="card-body p-0" style="background: rgba(255,255,255,0.95);">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle m-0 text-center">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="text-start ps-4 py-3">Pengirim & Info Blok</th>
+                      <th>Bulan Iuran</th>
+                      <th>Nominal</th>
+                      <th>Waktu Upload</th>
+                      <th>Struk</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-validasi"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 3.5. LAPORAN REKAP SEMUA WARGA -->
+        <div id="menu-laporan" style="display:none;">
+          <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+            <div class="card-header bg-info text-white fw-bold d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+              <span><i class="fas fa-file-invoice-dollar me-2"></i> Rekap Iuran 12 Bulan Warga</span>
+              <div class="d-flex align-items-center gap-2">
+                <label class="mb-0 small fw-bold">Tahun:</label>
+                <select id="filterTahunLaporan" class="form-select form-select-sm fw-bold text-dark w-auto" style="border-radius: 8px;" onchange="loadLaporanData()"></select>
+              </div>
+            </div>
+            <div class="card-body p-0" style="background: rgba(255,255,255,0.95);">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle m-0 text-center" style="font-size: 0.85rem; min-width: 800px;">
+                  <thead class="table-light">
+                    <tr>
+                      <th rowspan="2" class="align-middle text-start ps-4 py-3">Nama Warga</th>
+                      <th rowspan="2" class="align-middle">Blok</th>
+                      <th colspan="12" class="bg-secondary text-white py-2">Status Pembayaran Bulan</th>
+                    </tr>
+                    <tr class="bg-light">
+                      <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Mei</th><th>Jun</th><th>Jul</th><th>Ags</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-laporan"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. DATA WARGA -->
+        <div id="menu-data_warga" style="display:none;">
+          <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+            <div class="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+              <span><i class="fas fa-users me-2"></i> Data Warga AMCM</span>
+              <button class="btn btn-sm btn-success fw-bold shadow-sm px-3" style="border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#modalTambahWarga">+ Warga Baru</button>
+            </div>
+            <div class="card-body p-0" style="background: rgba(255,255,255,0.95);">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle m-0 text-center">
+                  <thead class="table-light"><tr><th class="py-3">Email</th><th>Nama Lengkap</th><th>Blok / No</th><th>Role</th><th>Aksi</th></tr></thead>
+                  <tbody id="table-warga"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. PENGATURAN -->
+        <div id="menu-pengaturan" style="display:none;">
+          <div class="card shadow-lg border-0 mx-auto" style="max-width: 500px; border-radius: 15px; overflow: hidden;">
+            <div class="card-header bg-secondary text-white fw-bold py-3"><i class="fas fa-cog me-2"></i> Pengaturan Sistem</div>
+            <div class="card-body p-4" style="background: rgba(255,255,255,0.95);">
+              <form onsubmit="handleSimpanPengaturan(event); return false;">
+                <div class="mb-4">
+                  <label class="fw-bold text-muted small">Nominal Iuran Bulanan (Rp)</label>
+                  <input type="number" id="settingBiaya" class="form-control form-control-lg text-center fw-bold text-primary bg-light" required />
+                </div>
+                <div class="mb-4">
+                  <label class="fw-bold text-muted small">Pesan Pengumuman Warga (Opsional)</label>
+                  <textarea id="settingPengumuman" class="form-control bg-light" rows="3" placeholder="Contoh: Info Kerja bakti hari minggu ini..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary fw-bold w-100 shadow-sm py-2" style="border-radius: 10px;">Simpan Pengaturan</button>
+              </form>
+              
+              <hr class="my-4 border-2">
+              <div class="alert alert-danger border-danger shadow-sm text-center" style="border-radius: 12px;">
+                <h6 class="fw-bold text-danger mb-2"><i class="fas fa-exclamation-triangle me-2"></i> Zona Berbahaya (Darurat)</h6>
+                <p class="small text-dark mb-3">Fitur ini akan menghapus <b>seluruh</b> riwayat pembayaran dan bukti transfer.</p>
+                <button type="button" class="btn btn-danger w-100 fw-bold shadow" style="border-radius: 10px;" onclick="eksekusiResetTotal()">
+                  <i class="fas fa-trash-alt me-2"></i> RESET SEMUA PEMBAYARAN
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL BAYAR MULTI-BULAN -->
+  <div class="modal fade" id="modalBayar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+        <div class="modal-header bg-primary text-white border-0 py-3">
+          <h5 class="modal-title fw-bold"><i class="fas fa-upload me-2"></i> Upload Bukti Iuran</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4 bg-light">
+          <form onsubmit="handleUploadBayar(event); return false;">
+            <input type="hidden" id="bayarBulanMulaiIdx" />
+            <input type="hidden" id="bayarTahun" />
+            
+            <div class="mb-3">
+              <label class="fw-bold text-muted small">Pembayaran Mulai Bulan:</label>
+              <input type="text" id="lblBulanMulai" class="form-control fw-bold text-primary bg-white" readonly />
+            </div>
+            
+            <div class="mb-3">
+              <label class="fw-bold text-muted small">Bayar Sekaligus Sampai Bulan:</label>
+              <select id="pilihanBulanSampai" class="form-select fw-bold border-primary bg-white" onchange="hitungTotalBayar()"></select>
+            </div>
+
+            <div class="alert alert-warning text-center border-warning" style="border-radius: 12px;">
+              <span class="d-block small mb-1">Total Yang Harus Dibayar:</span>
+              <h4 class="fw-bold text-danger mb-0" id="totalBayarText">Rp 0</h4>
+            </div>
+
+            <div class="mb-4">
+              <label class="fw-bold text-muted small">Upload Bukti Transfer (1 Struk bisa banyak bulan):</label>
+              <input type="file" id="fileBukti" class="form-control bg-white" accept="image/*" required />
+            </div>
+            <button type="submit" class="btn btn-primary fw-bold w-100 shadow-sm py-2" style="border-radius: 10px;">Kirim Bukti Pembayaran</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDIT WARGA -->
+  <div class="modal fade" id="modalEditWarga" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+        <div class="modal-header bg-warning text-dark border-0 py-3"><h5 class="modal-title fw-bold"><i class="fas fa-user-edit me-2"></i> Edit Akun Warga</h5><button type="button" class="btn-close btn-close-dark" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4 bg-light">
+          <form onsubmit="submitEditWarga(event); return false;">
+            <input type="hidden" id="edId" />
+            
+            <div class="mb-2"><label class="small text-muted fw-bold">Email</label><input type="email" id="edEmail" class="form-control" required /></div>
+            
+            <div class="mb-2">
+              <label class="small text-muted fw-bold">Nama Lengkap</label>
+              <div class="input-group shadow-sm">
+                <select id="edPanggilan" class="form-select bg-white fw-bold" style="max-width: 90px; border-right: none;">
+                  <option value="Bpk.">Bpk.</option>
+                  <option value="Ibu.">Ibu.</option>
+                </select>
+                <input type="text" id="edNama" class="form-control fw-bold" required />
+              </div>
+            </div>
+
+            <div class="row mb-2 g-2">
+              <div class="col-12 col-sm-6">
+                <label class="small text-muted fw-bold">Blok</label>
+                <select id="edBlok" class="form-select fw-bold border-primary shadow-sm" required>
+                  <option value="AMC 1">AMC 1</option>
+                  <option value="AMC 2">AMC 2</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6">
+                <label class="small text-muted fw-bold">No Rumah</label>
+                <input type="text" id="edNo" class="form-control" required />
+              </div>
+            </div>
+
+            <div class="mb-2"><label class="small text-muted fw-bold">No WhatsApp</label><input type="text" id="edWa" class="form-control" required /></div>
+            <div class="mb-2">
+              <label class="small text-muted fw-bold">Role (Hak Akses)</label>
+              <select id="edRole" class="form-select border-primary fw-bold text-primary">
+                <option value="warga">Warga Biasa</option>
+                <option value="admin">Admin</option>
+                <option value="superadmin">Superadmin</option>
+              </select>
+            </div>
+            <div class="mb-4"><label class="small text-muted fw-bold">Ganti Password (Opsional)</label><input type="password" id="edPass" class="form-control" placeholder="Kosongi jika tidak diubah" /></div>
+            <button type="submit" class="btn btn-warning text-dark fw-bold w-100 shadow-sm py-2" style="border-radius: 10px;">Simpan Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TAMBAH WARGA -->
+  <div class="modal fade" id="modalTambahWarga" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+        <div class="modal-header bg-success text-white border-0 py-3"><h5 class="modal-title fw-bold"><i class="fas fa-user-plus me-2"></i> Tambah Warga Baru</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4 bg-light">
+          <form onsubmit="handleTambahWarga(event); return false;">
+            <div class="mb-3"><input type="email" id="nwEmail" class="form-control" placeholder="Email Akun" required /></div>
+            <div class="mb-3"><input type="password" id="nwPass" class="form-control" placeholder="Password Awal" required /></div>
+            
+            <div class="mb-3">
+              <div class="input-group shadow-sm">
+                <select id="nwPanggilan" class="form-select bg-white fw-bold" style="max-width: 90px; border-right: none;">
+                  <option value="Bpk.">Bpk.</option>
+                  <option value="Ibu.">Ibu.</option>
+                </select>
+                <input type="text" id="nwNama" class="form-control fw-bold" placeholder="Nama Lengkap" required />
+              </div>
+            </div>
+
+            <div class="row mb-3 g-2">
+              <div class="col-12 col-sm-6">
+                <select id="nwBlok" class="form-select fw-bold border-primary shadow-sm" required>
+                  <option value="" disabled selected>Pilih Blok...</option>
+                  <option value="AMC 1">AMC 1</option>
+                  <option value="AMC 2">AMC 2</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6">
+                <input type="text" id="nwNo" class="form-control" placeholder="No Rumah (Cth: 20)" required />
+              </div>
+            </div>
+
+            <div class="mb-4"><input type="text" id="nwWa" class="form-control" placeholder="No WhatsApp" required /></div>
+            <button type="submit" class="btn btn-success fw-bold w-100 shadow-sm py-2" style="border-radius: 10px;">Simpan Warga</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PENGUMUMAN WARGA -->
+  <div class="modal fade" id="modalPengumuman" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+        <div class="modal-header bg-info text-white border-0 py-3">
+          <h5 class="modal-title fw-bold"><i class="fas fa-bullhorn me-2"></i> Pengumuman Penting!</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4 text-center">
+          <p id="teksPengumumanWarga" class="fs-5 fw-medium text-dark mb-0"></p>
+        </div>
+        <div class="modal-footer border-0 justify-content-center">
+          <button type="button" class="btn btn-primary fw-bold px-4" data-bs-dismiss="modal" style="border-radius: 10px;">Saya Mengerti</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NOTIF ADMIN -->
+  <div class="modal fade" id="modalNotifAdmin" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+        <div class="modal-header bg-danger text-white border-0 py-3">
+          <h5 class="modal-title fw-bold"><i class="fas fa-bell me-2"></i> Ada Validasi Iuran Baru!</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-3 bg-light">
+          <p class="mb-3 text-dark fw-medium text-center">Warga berikut baru saja mengirimkan struk pembayaran. Mohon segera di-ACC:</p>
+          <div id="listPendingAdmin" class="w-100"></div>
+        </div>
+        <div class="modal-footer border-0 justify-content-center bg-white">
+          <button type="button" class="btn btn-danger fw-bold px-4 w-100" data-bs-dismiss="modal" onclick="showMenu('validasi')" style="border-radius: 10px;">
+            <i class="fas fa-check-circle me-2"></i> Pergi ke Menu Validasi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    let currentUser = null;
+    let globalBiaya = 30000;
+    let globalPengumuman = ""; 
+    let hasShownAdminPopup = false; 
+
+    function mainkanSuaraTeguran() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); 
+        let pesan = "Heh Bro?! Sampeyan iku warga Ah sana Mojosari dudu toh?! Lek pancen warga anyar Ah sana Mojosari, kudu ijin sek, karo seng mbaukr'e'kso. Iku neng AMC siji, nomer Be Rong puluh?!";
+        let suaraRobot = new SpeechSynthesisUtterance(pesan);
+        suaraRobot.lang = 'id-ID'; 
+        suaraRobot.rate = 1.0; 
+        suaraRobot.pitch = 0.5; 
+        suaraRobot.volume = 2;  
+
+        let voices = window.speechSynthesis.getVoices();
+        let indoVoices = voices.filter(voice => voice.lang === 'id-ID' || voice.lang === 'id_ID');
+        if (indoVoices.length > 0) {
+          let maleVoice = indoVoices.find(v => v.name.toLowerCase().includes('male'));
+          if (maleVoice) { suaraRobot.voice = maleVoice; } 
+          else { suaraRobot.voice = indoVoices[0]; }
+        }
+        window.speechSynthesis.speak(suaraRobot);
+      }
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
+    }
+
+    function showLoader(show) { document.getElementById('loader').style.display = show ? 'flex' : 'none'; }
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); document.getElementById('sidebar-overlay').classList.toggle('show'); }
+    function matikanWarning() { document.getElementById('login-warning').style.display = 'none'; document.getElementById('login-warning').classList.remove('warning-denyut'); if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }
+
+    function showMenu(menuId) {
+      document.querySelectorAll('#content > div').forEach(div => div.style.display = 'none');
+      document.getElementById('menu-' + menuId).style.display = 'block';
+      document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+      
+      if(event && event.currentTarget && event.currentTarget.classList) {
+        event.currentTarget.classList.add('active');
+      } else {
+        let linkToActivate = document.querySelector(`a[onclick="showMenu('${menuId}')"]`);
+        if(linkToActivate) linkToActivate.classList.add('active');
+      }
+      
+      if(768 >= window.innerWidth) { 
+        document.getElementById('sidebar').classList.remove('show'); 
+        document.getElementById('sidebar-overlay').classList.remove('show'); 
+      }
+      
+      let isShowWarn = false;
+      if (menuId === 'dashboard') {
+        if (currentUser && currentUser.showWarning) { isShowWarn = true; }
+      }
+      document.getElementById('alert-pengingat').style.display = isShowWarn ? 'block' : 'none';
+
+      if(menuId === 'dashboard') loadDashboardData();
+      else if(menuId === 'validasi') loadValidasiData();
+      else if(menuId === 'data_warga') loadWargaData();
+      else if(menuId === 'laporan') loadLaporanData(); 
+      else if(menuId === 'pengaturan') {
+        document.getElementById('settingBiaya').value = globalBiaya;
+        document.getElementById('settingPengumuman').value = globalPengumuman;
+      }
+    }
+
+    function logout() { 
+      currentUser = null; 
+      hasShownAdminPopup = false; 
+      matikanWarning(); 
+      document.getElementById('app-page').style.display = 'none'; 
+      document.getElementById('login-page').style.display = 'flex'; 
+      document.getElementById('loginEmail').value = ''; 
+      document.getElementById('loginPassword').value = ''; 
+    }
+
+    function handleLogin(e) {
+      e.preventDefault(); 
+      matikanWarning(); 
+      
+      if ('speechSynthesis' in window) {
+        let pemanasan = new SpeechSynthesisUtterance('');
+        window.speechSynthesis.speak(pemanasan);
+        window.speechSynthesis.cancel();
+      }
+
+      showLoader(true);
+      google.script.run
+        .withSuccessHandler(res => {
+          showLoader(false);
+          if(res.status === 'success') { 
+            currentUser = res.user; 
+            globalBiaya = parseInt(res.biaya); 
+            globalPengumuman = res.pengumuman || "";
+            setupUI(); 
+            
+            if (currentUser.role === 'warga' && globalPengumuman.trim() !== "") {
+              document.getElementById('teksPengumumanWarga').innerHTML = globalPengumuman.replace(/\n/g, '<br>');
+              new bootstrap.Modal(document.getElementById('modalPengumuman')).show();
+            }
+          } else { 
+            const warnBox = document.getElementById('login-warning'); 
+            warnBox.style.display = 'block'; 
+            warnBox.classList.add('warning-denyut'); 
+            mainkanSuaraTeguran();
+          }
+        })
+        .withFailureHandler(err => { 
+          showLoader(false); alert("Error Server: " + err.message); 
+        })
+        .prosesLogin(document.getElementById('loginEmail').value.trim(), document.getElementById('loginPassword').value.trim());
+    }
+
+    function setupUI() {
+      document.getElementById('login-page').style.display = 'none'; 
+      document.getElementById('app-page').style.display = 'block';
+      let fotoUrl = currentUser.foto || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+      
+      let namaAsli = currentUser.nama || '';
+      let panggilan = 'Bpk.';
+      if(namaAsli.startsWith('Bpk. ')) { panggilan = 'Bpk.'; namaAsli = namaAsli.substring(5); }
+      else if(namaAsli.startsWith('Ibu. ')) { panggilan = 'Ibu.'; namaAsli = namaAsli.substring(5); }
+      
+      let namaPanggilanTampil = namaAsli.split(' ')[0];
+      if(namaPanggilanTampil === '') namaPanggilanTampil = "User";
+
+      document.getElementById('topbarName').innerText = panggilan + " " + namaPanggilanTampil;
+      document.getElementById('topbarPhoto').src = fotoUrl; 
+      document.getElementById('sidePhoto').src = fotoUrl;
+      document.getElementById('sideName').innerText = currentUser.nama;
+      
+      document.getElementById('topbar-notif-admin').style.display = 'none';
+      
+      let labelRole = currentUser.role.toUpperCase();
+      if (currentUser.role === 'warga') { labelRole += ` (Blok ${currentUser.blok}/${currentUser.no_rumah})`; }
+      document.getElementById('sideRole').innerText = labelRole;
+      
+      document.getElementById('profEmail').value = currentUser.email || '';
+      document.getElementById('profPanggilan').value = panggilan;
+      document.getElementById('profNama').value = namaAsli;
+      
+      let userBlok = currentUser.blok || 'AMC 1';
+      if(userBlok !== 'AMC 1' && userBlok !== 'AMC 2') userBlok = 'AMC 1';
+      document.getElementById('profBlok').value = userBlok;
+
+      document.getElementById('profNo').value = currentUser.no_rumah || '';
+      document.getElementById('profWa').value = currentUser.no_wa || '';
+
+      document.querySelectorAll('.menu-admin, .menu-superadmin').forEach(el => el.style.display = 'none');
+      document.getElementById('admin-dashboard-view').style.display = 'none';
+
+      // BAGIAN PENTING: Menu Data Warga sudah jadi kelas .menu-admin sehingga akan ditamplikan di sini
+      if(currentUser.role === 'superadmin' || currentUser.role === 'admin') {
+        document.querySelectorAll('.menu-admin').forEach(el => el.style.display = 'block');
+        document.getElementById('admin-dashboard-view').style.display = 'block';
+        if(currentUser.role === 'superadmin') {
+           document.querySelectorAll('.menu-superadmin').forEach(el => el.style.display = 'block');
+        }
+      }
+      
+      let filterTahun = document.getElementById('filterTahunLaporan');
+      let currentYear = new Date().getFullYear();
+      if (filterTahun.options.length === 0) {
+        for(let y = currentYear - 1; y <= currentYear + 2; y++) {
+            filterTahun.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`;
+        }
+      }
+
+      showMenu('dashboard');
+    }
+
+    function compressImage(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width; let height = img.height;
+            const MAX_SIZE = 800; 
+            if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
+            else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+            canvas.width = width; canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.6)); 
+          };
+        };
+      });
+    }
+
+    function loadDashboardData() {
+      showLoader(true);
+      google.script.run
+        .withSuccessHandler(data => {
+          showLoader(false);
+          
+          if (currentUser.role !== 'warga') {
+            document.getElementById('sum_masuk').innerText = "Rp " + data.summary.total_masuk.toLocaleString('id-ID');
+            document.getElementById('sum_lunas').innerText = data.summary.lunas; 
+            document.getElementById('sum_belum').innerText = data.summary.belum;
+
+            if (data.summary.belum > 0) {
+              currentUser.showWarning = true;
+              let spanduk = document.getElementById('alert-pengingat');
+              spanduk.style.display = 'block';
+              spanduk.className = 'alert alert-warning fw-bold shadow-sm text-dark border-warning';
+              spanduk.style.cursor = 'pointer';
+              spanduk.onclick = function() { showMenu('validasi'); };
+              document.getElementById('text-pengingat').innerHTML = `Terdapat <b>${data.summary.belum} Permintaan Validasi</b> Iuran Warga! (Klik di sini)`;
+              document.getElementById('topbar-notif-admin').style.display = 'block';
+            } else {
+              currentUser.showWarning = false;
+              document.getElementById('alert-pengingat').style.display = 'none';
+              document.getElementById('topbar-notif-admin').style.display = 'none';
+            }
+
+            if (data.summary.belum > 0 && !hasShownAdminPopup) {
+               google.script.run
+               .withSuccessHandler(pendingData => {
+                 if (pendingData && pendingData.length > 0) {
+                   let groupedPending = {};
+                   pendingData.forEach(d => {
+                      let key = (d.nama || 'Unknown') + "_" + (d.tgl || 'Unknown');
+                      if(!groupedPending[key]) {
+                         groupedPending[key] = { nama: d.nama || 'Nama Tidak Diketahui', blok: d.blok || '-', tahun: d.tahun || '', bukti: d.bukti || '', listBulan: [] };
+                      }
+                      groupedPending[key].listBulan.push(d.bulan);
+                   });
+
+                   let htmlPending = '';
+                   Object.values(groupedPending).forEach(p => {
+                     let bulanStr = p.listBulan.length > 1 ? (p.listBulan[0] + " s/d " + p.listBulan[p.listBulan.length-1]) : p.listBulan[0];
+                     let btnBukti = p.bukti ? `<a href="${p.bukti}" target="_blank" class="btn btn-info btn-sm text-white shadow-sm fw-bold"><i class="fas fa-file-image d-block mb-1"></i> Cek Struk</a>` : `<span class="badge bg-secondary">Tanpa Struk</span>`;
+                     
+                     // Format Bpk/Ibu untuk Notif Admin
+                     let namaStr = p.nama || '';
+                     let titleHtml = '';
+                     if (namaStr.startsWith('Bpk. ')) { titleHtml = '<span class="text-secondary fw-normal">Bpk.</span> '; namaStr = namaStr.substring(5); }
+                     else if (namaStr.startsWith('Ibu. ')) { titleHtml = '<span class="text-secondary fw-normal">Ibu.</span> '; namaStr = namaStr.substring(5); }
+
+                     htmlPending += `
+                       <div class="card border-warning border-2 shadow-sm mb-3 text-start" style="border-radius:10px;">
+                         <div class="card-body p-2 d-flex justify-content-between align-items-center bg-white">
+                           <div>
+                             <strong class="text-dark d-block" style="font-size:1.1rem;">${titleHtml}${namaStr}</strong>
+                             <small class="text-muted"><i class="fas fa-home me-1"></i>Blok ${p.blok}</small><br>
+                             <span class="badge bg-danger mt-1"><i class="fas fa-calendar-alt me-1"></i>${bulanStr} ${p.tahun}</span>
+                           </div>
+                           <div>${btnBukti}</div>
+                         </div>
+                       </div>`;
+                   });
+                   
+                   document.getElementById('listPendingAdmin').innerHTML = htmlPending;
+                   new bootstrap.Modal(document.getElementById('modalNotifAdmin')).show();
+                   hasShownAdminPopup = true; 
+                 }
+               }).getValidasiData();
+            }
+          }
+
+          let today = new Date(); 
+          let tgl = today.getDate();
+          let targetIdx = today.getMonth(); 
+          let targetThn = today.getFullYear();
+          if (tgl >= 29) { targetIdx++; if(targetIdx > 11){ targetIdx = 0; targetThn++; } }
+          let namaBulanTarget = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][targetIdx];
+          let blnBelumDibayar = false;
+          let htmlGrid = ''; let firstUnpaidIdx = -1; let firstUnpaidItem = null; let adaMenunggu = false;
+
+          data.tagihan_warga.forEach((item, idx) => {
+            if ((item.status === 'Belum Bayar' || item.status === 'Ditolak') && firstUnpaidIdx === -1) { firstUnpaidIdx = idx; firstUnpaidItem = item; }
+            if (item.status === 'Menunggu') adaMenunggu = true;
+            if (item.bulan === namaBulanTarget && item.tahun == targetThn && (item.status === 'Belum Bayar' || item.status === 'Ditolak')) { blnBelumDibayar = true; }
+
+            let bgClass = 'bg-white border-danger'; let badgeClass = 'bg-danger text-white';
+            let btnHtml = `<button class="btn btn-sm btn-danger w-100 fw-bold shadow-sm" onclick="bukaModalBayar('${item.bulan}', ${item.tahun}, ${idx})">Bayar</button>`;
+
+            if (item.status === 'Lunas') {
+              bgClass = 'bg-success text-white border-success'; badgeClass = 'bg-light text-success';
+              btnHtml = `<button class="btn btn-sm btn-light text-success w-100 fw-bold shadow-sm" onclick="window.open('${item.bukti}', '_blank')"><i class="fas fa-eye"></i> Struk</button>`;
+            } else if (item.status === 'Menunggu') {
+              bgClass = 'bg-warning text-dark border-warning'; badgeClass = 'bg-light text-warning';
+              btnHtml = `<div class="btn-group w-100 shadow-sm"><button class="btn btn-sm btn-light text-warning fw-bold" onclick="window.open('${item.bukti}', '_blank')" title="Lihat"><i class="fas fa-eye"></i></button><button class="btn btn-sm btn-secondary text-white fw-bold" onclick="bukaModalBayar('${item.bulan}', ${item.tahun}, ${idx})" title="Upload Ulang/Revisi"><i class="fas fa-edit"></i></button></div>`;
+            }
+
+            htmlGrid += `<div class="col-6 col-md-4 col-lg-3"><div class="card h-100 ${bgClass} border-2 shadow-sm" style="border-radius: 12px;"><div class="card-body text-center p-2"><h6 class="fw-bold mb-2">${item.bulan}</h6><span class="badge ${badgeClass} mb-3 w-100 p-2" style="font-size: 0.75rem;">${item.status}</span><br>${btnHtml}</div></div></div>`;
+          });
+          document.getElementById('grid-iuran-warga').innerHTML = htmlGrid;
+
+          let htmlTerkini = '';
+          if (firstUnpaidItem) {
+             htmlTerkini = `<div class="d-inline-block text-center w-100" style="max-width: 400px;"><div class="alert alert-danger px-4 py-4 shadow border-danger border-2 mb-0" style="border-radius: 15px;"><h5 class="fw-bold text-dark mb-1">Tagihan Belum Dibayar:</h5><h2 class="fw-bold text-danger mb-4">${firstUnpaidItem.bulan} ${firstUnpaidItem.tahun}</h2><button class="btn btn-danger btn-lg fw-bold shadow-sm w-100 py-3" style="border-radius: 10px; font-size:1.2rem;" onclick="bukaModalBayar('${firstUnpaidItem.bulan}', ${firstUnpaidItem.tahun}, ${firstUnpaidIdx})"><i class="fas fa-money-bill-wave me-2"></i> BAYAR SEKARANG</button></div></div>`;
+          } else if (adaMenunggu) {
+             htmlTerkini = `<div class="alert alert-warning d-inline-block px-5 py-4 shadow border-warning border-2 w-100" style="border-radius: 15px; max-width: 400px;"><i class="fas fa-clock fa-3x text-warning mb-3"></i><h4 class="fw-bold text-dark mb-1">Menunggu Validasi</h4><p class="mb-0 text-dark">Struk Anda sedang dicek oleh Admin.</p></div>`;
+          } else {
+             htmlTerkini = `<div class="alert alert-success d-inline-block px-5 py-4 shadow border-success border-2 w-100" style="border-radius: 15px; max-width: 400px;"><i class="fas fa-check-circle fa-3x text-success mb-3"></i><h4 class="fw-bold text-success mb-1">Iuran Lunas!</h4><p class="mb-0 text-success">Terima kasih, iuran Anda sudah beres sepenuhnya.</p></div>`;
+          }
+          document.getElementById('status-terkini-warga').innerHTML = htmlTerkini;
+
+          if (currentUser.role === 'warga') {
+            if ([29,30,31,1,2].includes(tgl) && blnBelumDibayar) {
+              currentUser.showWarning = true;
+              let spanduk = document.getElementById('alert-pengingat');
+              spanduk.style.display = 'block';
+              spanduk.className = 'alert alert-danger fw-bold shadow-sm text-dark';
+              spanduk.style.cursor = 'default';
+              spanduk.onclick = null;
+              document.getElementById('text-pengingat').innerText = `Untuk Segera Menyelesaikan Pembayaran Iuran Sampah Bulan ${namaBulanTarget} ${targetThn}`;
+            } else {
+              currentUser.showWarning = false; 
+              document.getElementById('alert-pengingat').style.display = 'none';
+            }
+          } else {
+            if (data.summary.belum === 0 && [29,30,31,1,2].includes(tgl) && blnBelumDibayar) {
+              currentUser.showWarning = true;
+              let spanduk = document.getElementById('alert-pengingat');
+              spanduk.style.display = 'block';
+              spanduk.className = 'alert alert-danger fw-bold shadow-sm text-dark';
+              spanduk.style.cursor = 'default';
+              spanduk.onclick = null;
+              document.getElementById('text-pengingat').innerText = `PRIBADI: Segera Selesaikan Iuran Sampah Anda (Bulan ${namaBulanTarget} ${targetThn})`;
+            }
+          }
+        })
+        .getDashboardData(currentUser.role, currentUser.id);
+    }
+
+    function loadLaporanData() {
+      let tahunTerpilih = document.getElementById('filterTahunLaporan').value;
+      if (!tahunTerpilih) tahunTerpilih = new Date().getFullYear();
+      
+      showLoader(true);
+      google.script.run
+        .withSuccessHandler(res => {
+          showLoader(false);
+          if (res.status === 'success') {
+             let htmlLaporan = '';
+             res.data.forEach(warga => {
+                let namaStr = warga.nama || '';
+                let titleHtml = '';
+                if (namaStr.startsWith('Bpk. ')) { titleHtml = '<span class="text-secondary fw-normal">Bpk.</span> '; namaStr = namaStr.substring(5); }
+                else if (namaStr.startsWith('Ibu. ')) { titleHtml = '<span class="text-secondary fw-normal">Ibu.</span> '; namaStr = namaStr.substring(5); }
+
+                htmlLaporan += `<tr>
+                  <td class="text-start ps-3 fw-bold text-primary">${titleHtml}${namaStr}<br><small class="text-muted fw-normal">${warga.no_wa}</small></td>
+                  <td><b>${warga.blok}</b></td>`;
+                
+                warga.tagihan_12_bulan.forEach(t => {
+                   let badgeCls = 'bg-danger'; let iconCls = 'fa-times';
+                   if (t.status === 'Lunas') { badgeCls = 'bg-success'; iconCls = 'fa-check'; }
+                   else if (t.status === 'Menunggu') { badgeCls = 'bg-warning text-dark'; iconCls = 'fa-clock'; }
+                   
+                   htmlLaporan += `<td><span class="badge ${badgeCls} w-100 p-2 shadow-sm" title="${t.status}"><i class="fas ${iconCls}"></i></span></td>`;
+                });
+                
+                htmlLaporan += `</tr>`;
+             });
+             
+             if (res.data.length === 0) {
+               htmlLaporan = `<tr><td colspan="14" class="text-muted p-4">Belum ada data warga terdaftar.</td></tr>`;
+             }
+             
+             document.getElementById('table-laporan').innerHTML = htmlLaporan;
+          } else {
+             alert(res.message);
+          }
+        })
+        .withFailureHandler(err => { showLoader(false); alert("Error memuat laporan: " + err.message); })
+        .getLaporanTagihanSemuaWarga(tahunTerpilih, currentUser.role);
+    }
+
+    function loadValidasiData() {
+      showLoader(true);
+      google.script.run
+        .withSuccessHandler(data => {
+          showLoader(false); 
+          let html = '';
+          if(!data || data.length === 0) {
+            html = `<tr><td colspan="6" class="text-muted p-4">Tidak ada antrean validasi pembayaran.</td></tr>`;
+          } else {
+            let grouped = {};
+            data.forEach(d => {
+               let key = (d.nama || 'Unknown') + "_" + (d.tgl || 'Unknown'); 
+               if(!grouped[key]) {
+                  grouped[key] = { nama: d.nama || 'Nama Tidak Diketahui', blok: d.blok || '-', tahun: d.tahun || '', tgl: d.tgl || '-', bukti: d.bukti || '', nominal: 0, listBulan: [], listId: [] };
+               }
+               grouped[key].listBulan.push(d.bulan);
+               grouped[key].listId.push(d.id_bayar);
+               grouped[key].nominal += parseInt(d.nominal) || 0;
+            });
+
+            Object.values(grouped).forEach(g => {
+              let bulanStr = g.listBulan.length > 1 ? (g.listBulan[0] + " s/d " + g.listBulan[g.listBulan.length-1]) : g.listBulan[0];
+              let idsStr = g.listId.join(','); 
+              let btnBukti = g.bukti ? `<a href="${g.bukti}" target="_blank" class="btn btn-sm btn-info text-white shadow-sm mb-1"><i class="fas fa-image"></i> Cek Struk</a>` : `<span class="badge bg-secondary">Tidak ada Struk</span>`;
+
+              let namaStr = g.nama || '';
+              let titleHtml = '';
+              if (namaStr.startsWith('Bpk. ')) { titleHtml = '<span class="text-secondary fw-normal">Bpk.</span> '; namaStr = namaStr.substring(5); }
+              else if (namaStr.startsWith('Ibu. ')) { titleHtml = '<span class="text-secondary fw-normal">Ibu.</span> '; namaStr = namaStr.substring(5); }
+
+              html += `<tr>
+                <td class="text-start ps-3"><b class="text-primary">${titleHtml}${namaStr}</b><br /><small class="text-muted"><i class="fas fa-home"></i> Blok ${g.blok}</small></td>
+                <td><b class="text-danger">${bulanStr}</b><br><small class="text-muted">${g.tahun}</small></td>
+                <td class="fw-bold text-success">Rp ${g.nominal.toLocaleString('id-ID')}</td>
+                <td><small>${g.tgl}</small></td>
+                <td>${btnBukti}</td>
+                <td>
+                  <div class="d-flex flex-column gap-1">
+                    <button class="btn btn-sm btn-success shadow-sm w-100" onclick="aksiValidasiMulti('${idsStr}', 'acc')"><i class="fas fa-check"></i> ACC</button>
+                    <button class="btn btn-sm btn-danger shadow-sm w-100" onclick="aksiValidasiMulti('${idsStr}', 'tolak')"><i class="fas fa-times"></i> Tolak</button>
+                  </div>
+                </td></tr>`;
+            });
+          }
+          document.getElementById('table-validasi').innerHTML = html;
+        })
+        .getValidasiData();
+    }
+
+    function aksiValidasiMulti(idsStr, aksi) {
+      let labelAksi = aksi === 'acc' ? 'ACC Lunas' : 'TOLAK';
+      if(!confirm("Proses " + labelAksi + " untuk iuran ini?")) return; 
+      showLoader(true);
+      
+      let arrIds = idsStr.split(',');
+      
+      function prosesSatuPersatu(index) {
+         if (index >= arrIds.length) {
+            showLoader(false);
+            alert("Semua status bulan berhasil diupdate!");
+            loadValidasiData();
+            loadDashboardData(); 
+            return;
+         }
+         google.script.run
+           .withSuccessHandler(res => { prosesSatuPersatu(index + 1); })
+           .withFailureHandler(err => { alert("Server Error pada salah satu data. Melanjutkan ke data berikutnya..."); prosesSatuPersatu(index + 1); })
+           .prosesValidasi(arrIds[index], aksi);
+      }
+      prosesSatuPersatu(0); 
+    }
+
+    async function handleUpdateProfil(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('profFoto');
+      let base64Foto = "";
+      if (fileInput.files.length > 0) base64Foto = await compressImage(fileInput.files[0]);
+      
+      let namaLengkap = document.getElementById('profPanggilan').value + " " + document.getElementById('profNama').value.trim();
+      
+      showLoader(true);
+      google.script.run.withSuccessHandler(res => {
+          showLoader(false); 
+          if(res && res.status === 'success') {
+            alert('Profil berhasil diupdate!'); currentUser = res.user; 
+            document.getElementById('profPass').value = ''; document.getElementById('profFoto').value = ''; 
+            setupUI(); showMenu('dashboard'); 
+          } else { alert("Gagal memproses data."); }
+        }).withFailureHandler(err => { showLoader(false); alert("Server Error: " + err.message); })
+        .updateProfil(currentUser.id, document.getElementById('profEmail').value, namaLengkap, document.getElementById('profBlok').value, document.getElementById('profNo').value, document.getElementById('profWa').value, document.getElementById('profPass').value, base64Foto);
+    }
+
+    function bukaModalBayar(bulan, tahun, idxBulan) {
+      document.getElementById('bayarBulanMulaiIdx').value = idxBulan; document.getElementById('bayarTahun').value = tahun; document.getElementById('lblBulanMulai').value = `${bulan} ${tahun}`;
+      let namaBulanAll = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      let selectSampai = document.getElementById('pilihanBulanSampai'); selectSampai.innerHTML = ''; 
+      for(let i = idxBulan; i < 12; i++) {
+        let option = document.createElement('option'); option.value = i; option.text = namaBulanAll[i] + ' ' + tahun; selectSampai.appendChild(option);
+      }
+      hitungTotalBayar(); new bootstrap.Modal(document.getElementById('modalBayar')).show();
+    }
+
+    function hitungTotalBayar() {
+      let jumlahBulan = (parseInt(document.getElementById('pilihanBulanSampai').value) - parseInt(document.getElementById('bayarBulanMulaiIdx').value)) + 1;
+      document.getElementById('totalBayarText').innerText = 'Rp ' + (jumlahBulan * globalBiaya).toLocaleString('id-ID');
+    }
+
+    async function handleUploadBayar(e) {
+      e.preventDefault(); const file = document.getElementById('fileBukti').files[0];
+      showLoader(true); bootstrap.Modal.getInstance(document.getElementById('modalBayar')).hide();
+      let idxMulai = parseInt(document.getElementById('bayarBulanMulaiIdx').value); let idxSampai = parseInt(document.getElementById('pilihanBulanSampai').value);
+      let tahun = document.getElementById('bayarTahun').value; let namaBulanAll = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      let listBulanBayar = []; for(let i = idxMulai; i <= idxSampai; i++) { listBulanBayar.push(namaBulanAll[i]); }
+      const base64Str = await compressImage(file);
+      google.script.run.withSuccessHandler(res => { showLoader(false); alert(res); loadDashboardData(); }).withFailureHandler(err => { showLoader(false); alert("Upload gagal: " + err.message); })
+        .simpanPembayaranMulti(currentUser.id, listBulanBayar, tahun, globalBiaya, base64Str);
+    }
+
+    let globalWargaData = [];
+    function loadWargaData() {
+      showLoader(true);
+      google.script.run.withSuccessHandler(data => {
+          showLoader(false); let html = ''; globalWargaData = data;
+          data.forEach(d => { 
+            let badgeColor = d.role === 'superadmin' ? 'bg-danger' : (d.role === 'admin' ? 'bg-primary' : 'bg-secondary');
+            
+            let aksiEdit = `<button class="btn btn-sm btn-info text-white shadow-sm" onclick="bukaEditWarga('${d.id}')"><i class="fas fa-edit"></i></button>`;
+            let aksiHapus = '';
+            
+            if (currentUser.role === 'superadmin' && d.role !== 'superadmin') {
+                aksiHapus = `<button class="btn btn-sm btn-danger shadow-sm" onclick="handleHapusWarga('${d.id}')"><i class="fas fa-trash"></i></button>`;
+            } else if (currentUser.role === 'admin') {
+                if (d.role === 'superadmin') {
+                    // Tombol Edit dihilangkan, diganti badge Locked untuk Admin saat melihat data Superadmin
+                    aksiEdit = `<span class="badge bg-secondary py-2"><i class="fas fa-lock"></i> Locked</span>`;
+                } else if (d.role === 'warga') {
+                    aksiHapus = `<button class="btn btn-sm btn-danger shadow-sm" onclick="handleHapusWarga('${d.id}')"><i class="fas fa-trash"></i></button>`;
+                }
+            }
+            
+            let namaTampil = d.nama || '';
+            // Jika akun lama tidak memiliki gelar Bpk/Ibu di database, berikan otomatis
+            if (!namaTampil.includes('Bpk.') && !namaTampil.includes('Ibu.')) {
+                namaTampil = 'Bpk. ' + namaTampil;
+            }
+
+            // Teks nama diubah warnanya jadi text-primary (Biru) agar sangat jelas
+            html += `<tr><td><small>${d.email}</small></td><td class="fw-bold text-primary">${namaTampil}</td><td>${d.blok}/${d.no}</td><td><span class="badge ${badgeColor} p-2">${d.role.toUpperCase()}</span></td>
+            <td>
+              <div class="d-flex justify-content-center gap-1 align-items-center">
+                ${aksiEdit}
+                ${aksiHapus}
+              </div>
+            </td></tr>`; 
+          });
+          document.getElementById('table-warga').innerHTML = html;
+        }).getSemuaWarga();
+    }
+
+    function bukaEditWarga(id_user) {
+      const u = globalWargaData.find(x => x.id === id_user); if(!u) return;
+      document.getElementById('edId').value = u.id; document.getElementById('edEmail').value = u.email; 
+      
+      let namaAsli = u.nama || '';
+      let panggilan = 'Bpk.';
+      if(namaAsli.startsWith('Bpk. ')) { panggilan = 'Bpk.'; namaAsli = namaAsli.substring(5); }
+      else if(namaAsli.startsWith('Ibu. ')) { panggilan = 'Ibu.'; namaAsli = namaAsli.substring(5); }
+      
+      document.getElementById('edPanggilan').value = panggilan;
+      document.getElementById('edNama').value = namaAsli;
+      
+      let userBlok = u.blok || 'AMC 1';
+      if(userBlok !== 'AMC 1' && userBlok !== 'AMC 2') userBlok = 'AMC 1';
+      document.getElementById('edBlok').value = userBlok;
+      
+      document.getElementById('edNo').value = u.no; document.getElementById('edWa').value = u.wa;
+      document.getElementById('edRole').value = u.role; document.getElementById('edPass').value = '';
+      
+      // BAGIAN PENTING: Semua form tidak diblokir agar Admin bisa ketik/edit isinya
+      let isHanyaAdmin = currentUser.role === 'admin';
+      document.getElementById('edEmail').disabled = false;
+      document.getElementById('edBlok').disabled = false;
+      document.getElementById('edNo').disabled = false;
+      document.getElementById('edWa').disabled = false;
+      document.getElementById('edPass').disabled = false;
+      
+      // Khusus form pilih role dikunci agar admin tidak bisa mengangkat admin baru
+      document.getElementById('edRole').disabled = isHanyaAdmin; 
+
+      new bootstrap.Modal(document.getElementById('modalEditWarga')).show();
+    }
+
+    function submitEditWarga(e) {
+      e.preventDefault(); showLoader(true); bootstrap.Modal.getInstance(document.getElementById('modalEditWarga')).hide();
+      
+      let namaLengkap = document.getElementById('edPanggilan').value + " " + document.getElementById('edNama').value.trim();
+
+      google.script.run
+        .withSuccessHandler(res => { showLoader(false); alert(res); loadWargaData(); })
+        .withFailureHandler(err => { showLoader(false); alert(err.message); })
+        .editWarga(
+           document.getElementById('edId').value, 
+           document.getElementById('edEmail').value, 
+           document.getElementById('edPass').value, 
+           namaLengkap, 
+           document.getElementById('edBlok').value, 
+           document.getElementById('edNo').value, 
+           document.getElementById('edWa').value, 
+           document.getElementById('edRole').value,
+           currentUser.role 
+        );
+    }
+
+    function handleTambahWarga(e) {
+      e.preventDefault(); showLoader(true); bootstrap.Modal.getInstance(document.getElementById('modalTambahWarga')).hide();
+      
+      let namaLengkap = document.getElementById('nwPanggilan').value + " " + document.getElementById('nwNama').value.trim();
+
+      google.script.run.withSuccessHandler(res => { 
+          showLoader(false); 
+          if (res && res.status === 'success') {
+              alert(res.message); 
+              globalPengumuman = res.pengumumanBaru; 
+              document.getElementById('settingPengumuman').value = globalPengumuman; 
+              loadWargaData(); 
+          } else if (res && res.status === 'error') {
+              alert(res.message);
+          } else {
+              alert(res); 
+              loadWargaData();
+          }
+      }).simpanWargaBaru(document.getElementById('nwEmail').value, document.getElementById('nwPass').value, namaLengkap, document.getElementById('nwBlok').value, document.getElementById('nwNo').value, document.getElementById('nwWa').value, currentUser.role);
+    }
+
+    function handleHapusWarga(id_user) {
+      if(!confirm("Hapus warga ini? Data & riwayat akan hilang!")) return; showLoader(true);
+      google.script.run.withSuccessHandler(res => { showLoader(false); alert(res); loadWargaData(); }).hapusWarga(id_user, currentUser.role);
+    }
+
+    function handleSimpanPengaturan(e) {
+      e.preventDefault(); showLoader(true); 
+      const nominal = document.getElementById('settingBiaya').value; const pengumuman = document.getElementById('settingPengumuman').value;
+      google.script.run.withSuccessHandler(res => { showLoader(false); alert(res); globalBiaya = parseInt(nominal); globalPengumuman = pengumuman; }).simpanPengaturan(nominal, pengumuman);
+    }
+
+    function eksekusiResetTotal() {
+      if (currentUser.role !== 'superadmin') {
+         alert("Akses Ditolak: Hanya Superadmin yang berhak mereset pembayaran!");
+         return;
+      }
+      let confirm1 = confirm("PERINGATAN KERAS!\n\nAnda yakin ingin MENGHAPUS SEMUA data tagihan dan pembayaran seluruh warga?");
+      if (confirm1) {
+         let confirm2 = confirm("Apakah Anda BENAR-BENAR YAKIN?\n\nAksi ini TIDAK BISA DIBATALKAN. Seluruh tagihan dari Januari - Desember untuk semua warga akan kembali menjadi 'Belum Bayar'!");
+         if (confirm2) {
+            showLoader(true);
+            google.script.run
+              .withSuccessHandler(res => { showLoader(false); alert(res); loadDashboardData(); })
+              .withFailureHandler(err => { showLoader(false); alert("Error sistem: " + err.message); })
+              .resetSemuaDataPembayaran(currentUser.role);
+         }
+      }
+    }
+  </script>
+</body>
+</html>
