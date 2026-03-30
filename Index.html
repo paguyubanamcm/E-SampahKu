@@ -9,296 +9,221 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+  
   <style>
-    :root { --primary: #0d6efd; --bg: #f8fafc; --white: #ffffff; }
+    :root { --primary: #0d6efd; --secondary: #6c757d; --bg: #f8fafc; --white: #ffffff; }
     
     body { 
       font-family: 'Plus Jakarta Sans', sans-serif; 
-      margin: 0; 
       background: var(--bg); 
-      overflow-x: hidden;
+      min-height: 100vh;
+      margin: 0;
+      overflow-y: auto;
     }
 
-    /* --- LOGIN PAGE --- */
+    /* --- LOGIN PAGE STYLING --- */
     #login-page {
       min-height: 100vh; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
       padding: 40px 20px;
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://freedomdigital.biz.id/gambarbebas/20260328-102840_GATE%20AMC%201%20&%20AMC%202.png');
+      background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://freedomdigital.biz.id/gambarbebas/20260328-102840_GATE%20AMC%201%20&%20AMC%202.png');
       background-size: cover; 
       background-position: center;
       background-attachment: fixed;
     }
     
     .login-card {
-      background: white; 
-      border-radius: 40px; 
-      padding: 40px; 
+      background: #ffffff; /* PUTIH BERSIH menyatu dengan logo */
+      border-radius: 50px; 
+      padding: 50px 40px; 
       width: 100%; 
-      max-width: 450px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
-      border: 2px solid #0d6efd;
-      display: flex; 
-      flex-direction: column; 
-      align-items: center;
-      position: relative;
+      max-width: 520px;
+      box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6); 
+      border: 3px solid var(--primary); 
+      text-align: center;
     }
-    
-    .brand-logo { width: 220px; height: auto; margin-bottom: 10px; }
 
-    /* WARNING BOX - ANIMASI PULSE */
+    /* LOGO: Ukuran mantap agar tulisan "By Totok" terlihat jelas */
+    .login-logo {
+      width: 280px; 
+      height: auto;
+      margin-bottom: 25px;
+      /* Filter drop-shadow dihilangkan agar menyatu sempurna jika logo punya bg putih */
+      transition: transform 0.3s ease;
+    }
+    .login-logo:hover {
+      transform: scale(1.03);
+    }
+
+    .app-title {
+      font-weight: 800;
+      font-size: 2.5rem; 
+      letter-spacing: -1px;
+      margin-bottom: 5px;
+      color: var(--primary);
+      text-transform: none; 
+    }
+
+    .app-subtitle {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #64748b;
+      margin-bottom: 35px;
+    }
+
+    /* WARNING BOX - PERSIS SCREENSHOT */
     .warning-box { 
       display: none; 
       background: #ff2a00; 
       color: white; 
       border-radius: 20px; 
-      padding: 20px; 
-      margin-bottom: 25px; 
-      text-align: center; 
-      border: 4px solid #000; 
-      width: 100%;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      animation: pulseWarning 1.2s infinite ease-in-out;
+      padding: 25px; 
+      margin-bottom: 30px; 
+      border: 3px solid #000; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      animation: pulse 1.5s infinite;
     }
-    
-    @keyframes pulseWarning {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); box-shadow: 0 15px 35px rgba(255, 42, 0, 0.7); }
-      100% { transform: scale(1); }
-    }
-
-    .warning-box h5 { font-weight: 900; letter-spacing: 1px; margin-bottom: 8px; font-size: 1.4rem; }
-    .warning-box .msg-main { font-weight: 800; font-size: 1rem; line-height: 1.2; }
-    .warning-box .msg-sub { font-weight: 700; font-size: 0.85rem; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px; }
-
-    /* FORM STYLING */
-    #formLogin { width: 100%; }
-    .form-control-custom {
-      border-radius: 20px; 
-      padding: 16px 25px; 
-      border: 2px solid #eee; 
+    .warning-header {
+      font-weight: 800;
+      font-size: 1.6rem;
       margin-bottom: 15px;
-      font-size: 1.1rem; 
-      width: 100%; 
-      transition: 0.3s;
+      display: block;
     }
-    .form-control-custom:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1); outline: none; }
-    
-    .btn-masuk {
-      background: #0d6efd; color: white; border: none; border-radius: 20px; 
-      padding: 18px; font-weight: 800; font-size: 1.2rem; text-transform: uppercase;
-      letter-spacing: 1px; transition: 0.3s; width: 100%; display: block;
-      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.4); cursor: pointer;
+    .warning-main-text {
+      font-weight: 800;
+      font-size: 1.15rem;
+      line-height: 1.4;
+      display: block;
+      margin-bottom: 10px;
     }
-    .btn-masuk:hover { background: #0b5ed7; transform: translateY(-3px); }
+    .warning-sub-text {
+      font-weight: 700;
+      font-size: 1rem;
+      display: block;
+    }
 
-    /* --- APP LAYOUT --- */
+    @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.02);} 100% {transform: scale(1);} }
+
+    /* --- LAYOUT UTILS --- */
     #app-page { display: none; }
-    .sidebar { width: 280px; height: 100vh; position: fixed; background: var(--white); border-right: 1px solid #e2e8f0; z-index: 1000; transition: 0.3s; }
-    .main-content { margin-left: 280px; padding: 30px; min-height: 100vh; }
-    
-    .user-profile-sidebar { padding: 30px 20px; text-align: center; border-bottom: 1px solid #f1f5f9; }
-    .badge-role { font-size: 0.7rem; padding: 6px 12px; border-radius: 10px; font-weight: 800; text-transform: uppercase; }
-
     #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
 
     @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
-      .main-content { margin-left: 0; padding: 15px; }
-      .login-card { padding: 35px 25px; border-radius: 35px; }
+      .login-card { padding: 40px 20px; border-radius: 40px; }
+      .app-title { font-size: 2.2rem; }
+      .login-logo { width: 220px; }
     }
   </style>
 </head>
 <body>
 
   <div id="loader">
-    <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem; border-width: 0.35em;"></div>
-    <h5 class="mt-3 fw-bold text-primary">Sinkronisasi Data...</h5>
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+    <h5 class="mt-3 fw-bold text-primary">Memproses...</h5>
   </div>
 
-  <!-- PAGE: LOGIN -->
+  <!-- SECTION: LOGIN -->
   <div id="login-page">
     <div class="login-card">
+      
+      <!-- WARNING BOX PERSIS SCREENSHOT -->
       <div id="warnCard" class="warning-box">
-        <h5>⚠️ WARNING !!! 😡</h5>
-        <div class="msg-main">BRO ANDA WARGA AHSANA MODERN CITY MOJOSARI (AMCM) BUKAN ??</div>
-        <div class="msg-sub">Kalau Warga AMCM tau dong harus hubungi siapa Adminnya?</div>
-      </div>
-
-      <div class="text-center mb-4">
-        <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" class="brand-logo" alt="Logo">
-        <h2 class="fw-bold text-primary mb-0" style="letter-spacing: -1.5px; font-size: 2.5rem;">E-SampahKu</h2>
-        <p class="text-muted fw-semibold" style="font-size: 1.1rem;">Ahsana Modern City Mojosari</p>
-      </div>
-
-      <form id="formLogin">
-        <input type="email" id="loginEmail" class="form-control-custom" placeholder="Email Anda" required>
-        <input type="password" id="loginPass" class="form-control-custom" placeholder="Password" required>
-        <button type="submit" class="btn-masuk">MASUK SISTEM</button>
-      </form>
-      <p class="mt-4 text-muted small fw-medium">© 2026 Paguyuban AMCM</p>
-    </div>
-  </div>
-
-  <!-- PAGE: MAIN APP -->
-  <div id="app-page">
-    <div class="sidebar shadow-sm">
-      <div class="user-profile-sidebar">
-        <img id="userFoto" class="rounded-circle mb-3 shadow-sm" width="90" height="90" style="object-fit:cover; border: 4px solid #0d6efd; padding: 3px;" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-        <h5 class="fw-bold mb-1 text-dark" id="userNama">Nama User</h5>
-        <div id="userRoleBadge"></div>
-      </div>
-      <div class="p-3">
-        <button class="btn btn-light w-100 mb-2 text-start fw-bold py-3 px-4 rounded-4" style="border: 1px solid #eee;">
-          <i class="fas fa-home me-2 text-primary"></i> Dashboard
-        </button>
-        <button class="btn btn-light w-100 mb-2 text-start fw-bold py-3 px-4 rounded-4" style="border: 1px solid #eee;">
-          <i class="fas fa-users me-2 text-primary"></i> Data Warga
-        </button>
-        <!-- Khusus Superadmin -->
-        <button id="btnReset" class="btn btn-light w-100 mb-4 text-start fw-bold py-3 px-4 rounded-4 d-none" style="border: 1px solid #ffcccc; color: #ff2a00;">
-          <i class="fas fa-undo me-2"></i> Reset Sistem
-        </button>
-        <hr>
-        <button class="btn btn-outline-danger w-100 rounded-pill fw-bold py-2" onclick="location.reload()">
-          <i class="fas fa-sign-out-alt me-1"></i> Logout
-        </button>
-      </div>
-    </div>
-
-    <div class="main-content">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold m-0"><span class="text-primary">E-SampahKu</span> Dashboard</h3>
-        <span class="text-muted fw-semibold">Senin, 30 Maret 2026</span>
+        <span class="warning-header">⚠️ WARNING !!! 😡</span>
+        <span class="warning-main-text">
+          BRO ANDA WARGA AHSANA MODERN CITY MOJOSARI (AMCM) BUKAN ??
+        </span>
+        <span class="warning-sub-text">
+          Kalau Warga AMCM tau dong harus hubungi siapa Adminnya?
+        </span>
       </div>
       
-      <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
-        <div class="d-flex align-items-center mb-3">
-          <div class="bg-primary-subtle p-3 rounded-4 me-3">
-            <i class="fas fa-info-circle text-primary fs-4"></i>
-          </div>
-          <div>
-            <h5 class="fw-bold mb-0">Informasi Status</h5>
-            <p class="text-muted small mb-0">Level Akses: <span id="accessLevelText" class="fw-bold"></span></p>
-          </div>
+      <!-- LOGO SEKARANG LEBIH BESAR & BACKGROUND MENYATU -->
+      <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" class="login-logo" alt="Logo AMCM By Totok">
+      
+      <h1 class="app-title">E-SampahKu</h1>
+      <p class="app-subtitle">Ahsana Modern City Mojosari</p>
+      
+      <form id="loginForm">
+        <div class="mb-3 text-start">
+          <label class="form-label small fw-bold ps-2 text-muted text-uppercase">Email Akun</label>
+          <input type="email" id="loginEmail" class="form-control py-3 rounded-4 border-2" placeholder="nama@email.com" required>
         </div>
-        <p class="mb-0 text-secondary">Selamat datang di sistem manajemen sampah AMCM. Sebagai <b id="userRoleName"></b>, Anda memiliki izin penuh untuk mengelola lingkungan Ahsana Modern City Mojosari.</p>
-      </div>
-
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card border-0 shadow-sm p-4 rounded-4 bg-white text-center">
-            <h6 class="text-muted fw-bold">TOTAL WARGA</h6>
-            <h1 class="fw-extrabold text-primary display-4">128</h1>
-          </div>
+        <div class="mb-4 text-start">
+          <label class="form-label small fw-bold ps-2 text-muted text-uppercase">Password</label>
+          <input type="password" id="loginPass" class="form-control py-3 rounded-4 border-2" placeholder="••••••••" required>
         </div>
-        <div class="col-md-4">
-          <div class="card border-0 shadow-sm p-4 rounded-4 bg-white text-center">
-            <h6 class="text-muted fw-bold text-success">LUNAS BULAN INI</h6>
-            <h1 class="fw-extrabold text-success display-4">95</h1>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card border-0 shadow-sm p-4 rounded-4 bg-white text-center">
-            <h6 class="text-muted fw-bold text-danger">BELUM BAYAR</h6>
-            <h1 class="fw-extrabold text-danger display-4">33</h1>
-          </div>
-        </div>
-      </div>
+        <button type="submit" class="btn btn-primary w-100 py-3 rounded-4 fw-bold fs-5 shadow-lg border-0">
+          MASUK SISTEM <i class="fas fa-arrow-right ms-2"></i>
+        </button>
+      </form>
     </div>
   </div>
 
+  <!-- SECTION: DASHBOARD (Hidden) -->
+  <div id="app-page">
+    <div class="p-5 text-center">
+      <h2 class="fw-bold">Dashboard E-SampahKu</h2>
+      <button class="btn btn-danger mt-4" onclick="location.reload()">Keluar</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyCIRkSJYkNAdFYsILGO6V_rIFxIn9g8-tqIsb5zR2P8-0BzO8K60e25b5qobh3x8TGRw/exec";
-    
+    // Simpan ini di bagian atas tag script
+    const CONFIG = {
+      gasUrl: "https://script.google.com/macros/s/GANTI_URL_GAS_LO/exec"
+    };
+
+    async function hashPassword(string) {
+      const utf8 = new TextEncoder().encode(string);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
     function speakWarning() {
       if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance();
-        msg.text = "Bro, anda warga Ahsana Modern City Mojosari bukan? Kalau warga AMCM tau dong harus hubungi siapa adminnya?";
+        const text = "Warning. Bro anda warga Ahsana Modern City Mojosari AMCM bukan? Kalau Warga AMCM tau dong harus hubungi siapa Adminnya?";
+        const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'id-ID';
         msg.rate = 0.9;
-        msg.pitch = 1;
         window.speechSynthesis.speak(msg);
       }
     }
 
-    async function callGAS(funcName, ...args) {
-      try {
-        const response = await fetch(GAS_URL, {
-          method: 'POST',
-          body: JSON.stringify({ functionName: funcName, parameters: args })
-        });
-        return await response.json();
-      } catch (err) { return null; }
-    }
-
-    document.getElementById('formLogin').addEventListener('submit', async (e) => {
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const passRaw = document.getElementById('loginPass').value;
+      const passHashed = await hashPassword(passRaw);
+
       document.getElementById('loader').style.display = 'flex';
-      document.getElementById('warnCard').style.display = 'none';
-
-      const email = document.getElementById('loginEmail').value.toLowerCase().trim();
-      const pass = document.getElementById('loginPass').value;
-
-      // --- BYPASS LOGIC (SESUAI REQUEST USER) ---
-      let userData = null;
-
-      if (email === "superadmin@amcm.com" && pass === "12345") {
-        userData = { nama: "Super Admin AMCM", role: "superadmin", foto: "https://cdn-icons-png.flaticon.com/512/6024/6024190.png" };
-      } else if (email === "admin@amcm.com" && pass === "12345") {
-        userData = { nama: "Admin AMCM", role: "admin", foto: "https://cdn-icons-png.flaticon.com/512/9431/9431181.png" };
-      }
-
-      if (userData) {
-        setTimeout(() => loginSuccess(userData), 1000);
-        return;
-      }
-
-      // --- REMOTE CHECK GAS ---
+      
       try {
-        const res = await callGAS('prosesLogin', email, pass);
+        const response = await fetch(CONFIG.gasUrl, {
+          method: 'POST',
+          body: JSON.stringify({ functionName: 'prosesLogin', parameters: [email, passHashed] })
+        });
+        const res = await response.json();
         document.getElementById('loader').style.display = 'none';
-        
-        if (res && (res.status === 'success' || (res.data && res.data.status === 'success'))) {
-          const user = res.user || res.data.user;
-          loginSuccess(user);
+
+        if (res.status === 'success') {
+          document.getElementById('login-page').style.display = 'none';
+          document.getElementById('app-page').style.display = 'block';
         } else {
           document.getElementById('warnCard').style.display = 'block';
           speakWarning();
         }
-      } catch (err) { 
+      } catch (err) {
         document.getElementById('loader').style.display = 'none';
+        // Simulasi warning jika koneksi gagal/belum diset
         document.getElementById('warnCard').style.display = 'block';
         speakWarning();
       }
     });
-
-    function loginSuccess(user) {
-      document.getElementById('loader').style.display = 'none';
-      document.getElementById('login-page').style.display = 'none';
-      document.getElementById('app-page').style.display = 'block';
-      
-      document.getElementById('userNama').innerText = user.nama;
-      document.getElementById('userRoleName').innerText = user.role.toUpperCase();
-      document.getElementById('accessLevelText').innerText = user.role === 'superadmin' ? "Full Control Access" : "Management Access";
-      
-      const badgeContainer = document.getElementById('userRoleBadge');
-      if(user.role === 'superadmin') {
-        badgeContainer.innerHTML = '<span class="badge bg-danger badge-role"><i class="fas fa-crown me-1"></i> SUPERADMIN</span>';
-        document.getElementById('btnReset').classList.remove('d-none'); // Munculkan tombol reset
-      } else {
-        badgeContainer.innerHTML = '<span class="badge bg-primary badge-role"><i class="fas fa-user-shield me-1"></i> ADMIN</span>';
-        document.getElementById('btnReset').classList.add('d-none'); // Pastikan sembunyi untuk admin
-      }
-      
-      if(user.foto) document.getElementById('userFoto').src = user.foto;
-    }
   </script>
 </body>
 </html>
