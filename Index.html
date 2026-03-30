@@ -32,14 +32,10 @@
     .sidebar { width: 280px; height: 100vh; position: fixed; background: var(--white); border-right: 1px solid #e2e8f0; z-index: 1000; }
     .main-content { margin-left: 280px; padding: 30px; min-height: 100vh; }
     .nav-link-custom { display: flex; align-items: center; padding: 12px 20px; color: #64748b; text-decoration: none; border-radius: 12px; margin: 4px 15px; font-weight: 600; cursor: pointer; }
-    .nav-link-custom.active { background: var(--primary); color: white; shadow: 0 4px 6px rgba(30, 64, 175, 0.2); }
-    .nav-link-custom:hover:not(.active) { background: #f1f5f9; color: var(--primary); }
+    .nav-link-custom.active { background: var(--primary); color: white; }
 
     /* --- LOADER --- */
     #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
-    
-    .stat-card { border: none; border-radius: 20px; transition: 0.3s; }
-    .stat-card:hover { transform: translateY(-5px); }
   </style>
 </head>
 <body>
@@ -73,7 +69,7 @@
   <div id="app-page">
     <div class="sidebar">
       <div class="p-4 text-center">
-        <img id="userFoto" class="rounded-circle mb-3 shadow-sm" width="80" height="80" style="object-fit:cover; border: 3px solid var(--primary);">
+        <img id="userFoto" class="rounded-circle mb-3 shadow-sm" width="80" height="80" style="object-fit:cover; border: 3px solid var(--primary);" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
         <h6 class="fw-bold mb-0" id="userNama">User</h6>
         <span class="badge bg-primary-subtle text-primary mt-2" id="userRole">ROLE</span>
       </div>
@@ -88,76 +84,30 @@
     </div>
 
     <div class="main-content">
-      <!-- VIEW: DASHBOARD -->
       <div id="view-dashboard" class="view-section">
         <h3 class="fw-bold mb-4">Ringkasan Sistem</h3>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="card p-4 stat-card shadow-sm bg-primary text-white">
-                    <h6 class="opacity-75">Total Warga Terdaftar</h6>
-                    <h2 id="statWarga" class="fw-bold">0</h2>
-                    <i class="fas fa-users position-absolute end-0 bottom-0 m-3 opacity-25 fa-3x"></i>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="card p-4 border-0 shadow-sm rounded-4">
-                    <h6 class="fw-bold text-primary"><i class="fas fa-bullhorn me-2"></i> Pengumuman</h6>
-                    <hr>
-                    <p id="dashPengumuman" class="text-muted">Memuat pengumuman terbaru...</p>
-                </div>
-            </div>
-        </div>
+        <div id="dashContent">Memuat data...</div>
       </div>
-
-      <!-- VIEW: WARGA -->
       <div id="view-warga" class="view-section" style="display:none;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold mb-0">Manajemen Warga</h3>
-        </div>
+        <h3 class="fw-bold mb-4">Manajemen Warga</h3>
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <table class="table align-middle mb-0">
                 <thead class="bg-light">
-                    <tr>
-                        <th class="ps-3">Nama Warga</th>
-                        <th>Blok/No</th>
-                        <th>WhatsApp</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                    <tr><th>Nama</th><th>Blok/No</th><th>WhatsApp</th><th>Aksi</th></tr>
                 </thead>
                 <tbody id="listWarga"></tbody>
             </table>
-        </div>
-      </div>
-
-      <!-- VIEW: SETTING -->
-      <div id="view-setting" class="view-section" style="display:none;">
-        <h3 class="fw-bold mb-4">Pengaturan Global</h3>
-        <div class="card border-0 shadow-sm rounded-4 p-4">
-            <form id="formSimpanSetting">
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Biaya Sampah Bulanan (Rp)</label>
-                    <input type="number" id="inBiaya" class="form-control rounded-3" required>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Teks Pengumuman Dashboard</label>
-                    <textarea id="inPengumuman" class="form-control rounded-3" rows="4"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Simpan Pengaturan</button>
-            </form>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    /**
-     * URL APPS SCRIPT LO
-     */
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyCIRkSJYkNAdFYsILGO6V_rIFxIn9g8-tqIsb5zR2P8-0BzO8K60e25b5qobh3x8TGRw/exec";
+    // --- GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT LO ---
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwl8LkiMRNaIf7K9W4j87YuNjNWvpUJ35oMbuhuI3oCAcT-GswRm72KRoA7_DyWgJWSNQ/exec";
 
     let currentUser = null;
 
-    // --- FUNGSI CALL GAS ---
     async function callGAS(funcName, ...args) {
       try {
         const response = await fetch(GAS_URL, {
@@ -165,6 +115,7 @@
           body: JSON.stringify({ functionName: funcName, parameters: args })
         });
         const result = await response.json();
+        // Sesuai dengan Code.gs: result adalah data langsung, atau objek error
         if (result.status === 'error') throw new Error(result.message);
         return result;
       } catch (err) {
@@ -177,13 +128,22 @@
       document.getElementById('loader').style.display = show ? 'flex' : 'none';
     }
 
-    // --- LOGIN ---
+    function playWarningVoice() {
+      if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance("BRO ANDA WARGA AMCM BUKAN ??");
+        msg.lang = 'id-ID';
+        window.speechSynthesis.speak(msg);
+      }
+    }
+
     document.getElementById('formLogin').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const pass = document.getElementById('loginPass').value;
       
       toggleLoader(true);
+      document.getElementById('warnCard').style.display = 'none';
+
       try {
         const res = await callGAS('prosesLogin', email, pass);
         toggleLoader(false);
@@ -193,85 +153,64 @@
           startApp();
         } else {
           document.getElementById('warnCard').style.display = 'block';
-          if ('speechSynthesis' in window) {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("BRO ANDA WARGA AMCM BUKAN ??"));
-          }
+          playWarningVoice();
         }
       } catch (err) {
         toggleLoader(false);
-        Swal.fire("Error", "Cek koneksi internet atau GAS_URL.", "error");
+        Swal.fire("Error", "Gagal menghubungi server. Pastikan GAS_URL benar.", "error");
       }
     });
 
-    async function startApp() {
+    function startApp() {
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('app-page').style.display = 'block';
       document.getElementById('userNama').innerText = currentUser.nama;
       document.getElementById('userRole').innerText = currentUser.role.toUpperCase();
-      document.getElementById('userFoto').src = currentUser.foto || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+      if(currentUser.foto) document.getElementById('userFoto').src = currentUser.foto;
       
-      // Filter Menu Berdasarkan Role
       if (currentUser.role === 'warga') {
           document.getElementById('menuWarga').style.display = 'none';
           document.getElementById('menuSet').style.display = 'none';
       }
-      
-      loadDashboard();
+      showView('dashboard');
     }
 
-    function showView(view, el) {
+    async function showView(view, el) {
         document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
         document.querySelectorAll('.nav-link-custom').forEach(n => n.classList.remove('active'));
         document.getElementById('view-' + view).style.display = 'block';
         if(el) el.classList.add('active');
-        
-        if (view === 'warga') renderWarga();
-        if (view === 'setting') loadSettings();
-    }
 
-    async function loadDashboard() {
-        try {
-            const [warga, settings] = await Promise.all([
-                callGAS('getSemuaWarga'),
-                callGAS('getSettings')
-            ]);
-            document.getElementById('statWarga').innerText = warga.length;
-            document.getElementById('dashPengumuman').innerText = settings.pengumuman || "Belum ada pengumuman.";
-        } catch(e) {}
+        if (view === 'dashboard') {
+            const data = await callGAS('getSettings');
+            document.getElementById('dashContent').innerHTML = `
+                <div class="card p-4 border-0 shadow-sm rounded-4">
+                    <h5 class="fw-bold text-primary">Pengumuman</h5>
+                    <p>${data.pengumuman || 'Tidak ada pengumuman.'}</p>
+                    <hr>
+                    <p>Biaya Iuran: <b>Rp ${data.biaya || '0'}</b></p>
+                </div>
+            `;
+        } else if (view === 'warga') {
+            renderWarga();
+        }
     }
 
     async function renderWarga() {
         toggleLoader(true);
-        try {
-            const data = await callGAS('getSemuaWarga');
-            toggleLoader(false);
-            let html = '';
-            data.forEach(w => {
-                html += `<tr>
-                    <td class="ps-3 fw-bold">${w.nama}</td>
-                    <td>${w.blok}/${w.no}</td>
-                    <td><a href="https://wa.me/${w.wa}" target="_blank" class="text-success fw-bold">${w.wa || '-'}</a></td>
-                    <td class="text-center"><button class="btn btn-sm btn-light border" onclick="alert('Fitur Edit Hadir Segera')">Edit</button></td>
-                </tr>`;
-            });
-            document.getElementById('listWarga').innerHTML = html || '<tr><td colspan="4" class="text-center p-3">Data Kosong</td></tr>';
-        } catch(e) { toggleLoader(false); }
-    }
-
-    async function loadSettings() {
-        const s = await callGAS('getSettings');
-        document.getElementById('inBiaya').value = s.biaya;
-        document.getElementById('inPengumuman').value = s.pengumuman;
-    }
-
-    document.getElementById('formSimpanSetting').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        toggleLoader(true);
-        const res = await callGAS('simpanPengaturan', document.getElementById('inBiaya').value, document.getElementById('inPengumuman').value);
+        const data = await callGAS('getSemuaWarga');
         toggleLoader(false);
-        Swal.fire("Berhasil", res, "success");
-        loadDashboard();
-    });
+        let html = '';
+        data.forEach(w => {
+            html += `<tr>
+                <td>${w.nama}</td>
+                <td>${w.blok}/${w.no}</td>
+                <td>${w.wa || '-'}</td>
+                <td><button class="btn btn-sm btn-outline-primary">Detail</button></td>
+            </tr>`;
+        });
+        document.getElementById('listWarga').innerHTML = html;
+    }
   </script>
 </body>
 </html>
