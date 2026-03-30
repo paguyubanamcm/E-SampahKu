@@ -1,7 +1,7 @@
 /**
  * KONFIGURASI SPREADSHEET
  */
-const SPREADSHEET_ID = "GANTI_DENGAN_ID_SPREADSHEET_LO"; 
+const SPREADSHEET_ID = "1M_eEywnjoj9rzSBOJZ8Yxf-Q4lYXMA5lX4GTd0sgXJU"; 
 const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
 const sheetUsers = ss.getSheetByName("Users");
 const sheetSettings = ss.getSheetByName("Settings");
