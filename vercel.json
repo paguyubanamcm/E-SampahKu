@@ -1,0 +1,1 @@
+{"version": 2,"name": "e-sampahku-amcm","builds": [{"src": "Index.html","use": "@vercel/static"}],"routes": [{"src": "/(.*)","dest": "/Index.html"}]}
