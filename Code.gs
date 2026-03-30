@@ -534,3 +534,16 @@ function resetSemuaDataPembayaran(aktorRole) {
 
   return "Sukses: Seluruh data riwayat pembayaran dan tagihan semua warga telah dihapus bersih!";
 }
+
+
+function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var funcName = data.functionName;
+  var args = data.parameters;
+  
+  // Memanggil fungsi berdasarkan nama yang dikirim dari Vercel
+  var result = this[funcName].apply(null, args);
+  
+  return ContentService.createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
