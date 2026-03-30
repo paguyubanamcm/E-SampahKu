@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAMPAHKU AMCM - Sistem Iuran Warga</title>
   
-  <!-- CSS Frameworks -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
@@ -24,9 +25,18 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--background);
       color: #1e293b;
+      margin: 0;
     }
 
-    /* Overlay Loader */
+    .brand-title {
+      font-weight: 900;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+    }
+
+    .fw-800 { font-weight: 800; }
+    .fw-900 { font-weight: 900; }
+
     #loader-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -39,7 +49,6 @@
       justify-content: center;
     }
 
-    /* Login Screen */
     #login-page {
       min-height: 100vh;
       display: flex;
@@ -61,14 +70,6 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
-    /* Custom Style untuk Judul Gemuk */
-    .brand-title {
-      font-weight: 900; /* Paling tebal */
-      letter-spacing: -1px;
-      text-transform: uppercase;
-    }
-
-    /* App Layout */
     .sidebar {
       background: white;
       height: 100vh;
@@ -92,8 +93,8 @@
       text-decoration: none;
     }
 
-    .nav-link:hover {
-      background: #f8fafc;
+    .nav-link:hover, .nav-link.active {
+      background: #eff6ff;
       color: var(--primary);
     }
 
@@ -108,37 +109,33 @@
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
-    .table th {
-      background: #f8fafc;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      color: #64748b;
-      padding: 16px;
+    .role-badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        font-weight: 800;
     }
 
     @media (max-width: 768px) {
-      .sidebar { height: auto; position: relative; border-right: none; }
+      .sidebar { height: auto; position: relative; border-right: none; margin-bottom: 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Loading Overlay -->
   <div id="loader-overlay">
     <div class="spinner-border text-primary mb-3" role="status"></div>
     <span class="fw-bold">Mohon Tunggu...</span>
   </div>
 
-  <!-- PAGE: LOGIN -->
+  <!-- LOGIN PAGE -->
   <div id="login-page">
-    <div class="login-card shadow-lg">
+    <div class="login-card">
       <div class="text-center mb-4">
-        <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" alt="Logo AMC" style="width: 120px;">
-        <!-- UPDATE: Judul Branding Lebih Tebal/Gemuk -->
+        <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" alt="Logo AMC" style="width: 100px;">
         <h2 class="mt-3 brand-title text-primary">SAMPAHKU AMCM</h2>
-        <p class="text-muted small">Kelola iuran kebersihan warga jadi lebih mudah</p>
+        <p class="text-muted small">Kelola Iuran Jadi Lebih Mudah</p>
       </div>
       <form id="loginForm">
         <div class="mb-3">
@@ -154,96 +151,90 @@
     </div>
   </div>
 
-  <!-- PAGE: MAIN APP -->
+  <!-- MAIN APP -->
   <div id="app-page" style="display: none;">
     <div class="container-fluid">
       <div class="row">
         <!-- SIDEBAR -->
         <div class="col-md-3 col-lg-2 sidebar">
           <div class="d-flex align-items-center mb-5 gap-2">
-             <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" style="width: 40px;">
+             <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" style="width: 35px;">
              <span class="brand-title fs-5 text-primary">SAMPAHKU</span>
           </div>
           <nav class="nav flex-column" id="main-nav">
-            <a class="nav-link active" onclick="showMenu('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a class="nav-link" id="menu-warga" onclick="showMenu('warga')" style="display: none;"><i class="fas fa-users"></i> Data Warga</a>
-            <a class="nav-link" id="menu-pengaturan" onclick="showMenu('pengaturan')" style="display: none;"><i class="fas fa-cog"></i> Pengaturan</a>
-            <a class="nav-link" onclick="logout()"><i class="fas fa-sign-out-alt text-danger"></i> Keluar</a>
+            <a class="nav-link active" onclick="showMenu('dashboard')"><i class="fas fa-home"></i> Dashboard</a>
+            <a class="nav-link" id="nav-warga" onclick="showMenu('warga')" style="display: none;"><i class="fas fa-users"></i> Data Warga</a>
+            <a class="nav-link" id="nav-pengaturan" onclick="showMenu('pengaturan')" style="display: none;"><i class="fas fa-cog"></i> Pengaturan</a>
+            <a class="nav-link" onclick="logout()"><i class="fas fa-power-off text-danger"></i> Keluar</a>
           </nav>
         </div>
 
         <!-- CONTENT -->
         <div class="col-md-9 col-lg-10 p-4">
-          <!-- View: Dashboard -->
           <div id="view-dashboard" class="view-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <h3 class="fw-800">Halo, <span id="userNama" class="text-primary">Warga</span>!</h3>
-              <div class="badge bg-white text-dark p-2 border shadow-sm">
-                <i class="fas fa-user-tag me-1 text-primary"></i> <span id="userRole">Warga</span>
-              </div>
+                <h3 class="fw-900 mb-0">Halo, <span id="dispNamaUser">Warga</span></h3>
+                <span id="badgeRole" class="role-badge bg-primary text-white">Warga</span>
             </div>
-
+            
             <div class="row mb-4">
               <div class="col-md-4 mb-3">
-                <div class="card p-4">
+                <div class="card p-4 text-center">
                   <small class="text-muted fw-bold">STATUS TAHUN INI</small>
-                  <h2 class="fw-800 mb-0 text-success" id="dispStatusTahun">LUNAS</h2>
+                  <h2 class="fw-900 text-success mt-2" id="dispStatus">LUNAS</h2>
                 </div>
               </div>
               <div class="col-md-8 mb-3">
                 <div class="card p-4 bg-primary text-white">
-                  <div class="d-flex align-items-center gap-3">
-                    <i class="fas fa-bullhorn fs-1"></i>
-                    <div>
-                      <small class="fw-bold opacity-75">PENGUMUMAN TERBARU</small>
-                      <p id="dispPengumuman" class="mb-0 fw-600">Memuat pengumuman...</p>
-                    </div>
-                  </div>
+                  <small class="fw-bold opacity-75">INFORMASI TERBARU</small>
+                  <p id="dispPengumuman" class="fs-5 mb-0 fw-600">Memuat pengumuman...</p>
                 </div>
               </div>
             </div>
-
-            <div class="card overflow-hidden">
-              <div class="card-header bg-white py-3 border-0">
-                <h5 class="mb-0 fw-800"><i class="fas fa-receipt me-2 text-primary"></i>Riwayat Iuran <span id="dispTahunSekarang">2024</span></h5>
-              </div>
+            
+            <div class="card">
               <div class="table-responsive">
-                <table class="table align-middle mb-0">
-                  <thead>
-                    <tr>
-                      <th class="ps-4">Bulan</th>
-                      <th>Tagihan</th>
-                      <th>Status</th>
-                      <th class="text-center">Aksi</th>
-                    </tr>
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr><th class="ps-4">Bulan</th><th>Tagihan</th><th>Status</th></tr>
                   </thead>
                   <tbody id="table-iuran-user"></tbody>
                 </table>
               </div>
             </div>
           </div>
-          
-          <!-- View: Data Warga (Admin) -->
+
           <div id="view-warga" class="view-section" style="display: none;">
-            <!-- Tabel Data Warga sesuai logic_part_2 -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h3 class="fw-800">Data Warga</h3>
-            </div>
-            <div class="card">
+            <h3 class="fw-900 mb-4">Data Warga AMC</h3>
+            <div class="card overflow-hidden">
               <div class="table-responsive">
                 <table class="table align-middle mb-0">
-                  <thead>
-                    <tr>
-                      <th class="ps-3">Profil</th>
-                      <th>Rumah</th>
-                      <th>WA</th>
-                      <th>Role</th>
-                      <th>Aksi</th>
-                    </tr>
+                  <thead class="table-light">
+                    <tr><th class="ps-3">Profil</th><th>Rumah</th><th>Role</th><th>Aksi</th></tr>
                   </thead>
                   <tbody id="table-warga"></tbody>
                 </table>
               </div>
+            </div>
+          </div>
+
+          <div id="view-pengaturan" class="view-section" style="display: none;">
+            <h3 class="fw-900 mb-4">Pengaturan Superadmin</h3>
+            <div class="alert alert-warning border-0 shadow-sm rounded-4">
+                <i class="fas fa-exclamation-triangle me-2"></i> Hanya <b>Superadmin</b> yang bisa mengubah konfigurasi utama sistem.
+            </div>
+            <div class="card p-4 col-md-6">
+                <form id="formSettings">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Biaya Iuran (Rp)</label>
+                        <input type="number" id="setBiaya" class="form-control" placeholder="25000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Pesan Pengumuman</label>
+                        <textarea id="setInfo" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Update Sistem</button>
+                </form>
             </div>
           </div>
         </div>
@@ -252,11 +243,13 @@
   </div>
 
   <script>
-    // SISIPAN BRIDGE UNTUK VERCEL/GAS
+    // --- PENTING: GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT LO ---
     const CONFIG = {
-        gasUrl: "MASUKKAN_URL_WEB_APP_GAS_LO_DISINI",
+        gasUrl: "https://script.google.com/macros/s/GANTI_DENGAN_URL_LO/exec",
         isHosting: window.location.hostname !== 'script.google.com' 
     };
+
+    let currentUser = null;
 
     async function callGAS(funcName, ...args) {
         if (!CONFIG.isHosting) {
@@ -272,14 +265,9 @@
                     body: JSON.stringify({ functionName: funcName, parameters: args })
                 });
                 return await response.json();
-            } catch (error) {
-                console.error("GAS Bridge Error:", error);
-                throw error;
-            }
+            } catch (error) { throw error; }
         }
     }
-
-    let currentUser = null;
 
     function showLoader(show) { document.getElementById('loader-overlay').style.display = show ? 'flex' : 'none'; }
     function logout() { location.reload(); }
@@ -289,43 +277,70 @@
         showLoader(true);
         const email = document.getElementById('loginEmail').value;
         const pass = document.getElementById('loginPass').value;
-
         try {
-            const res = await callGAS('prosesLogin', email, pass); 
+            const res = await callGAS('prosesLogin', email, pass);
             if (res.status === 'success') {
                 currentUser = res.user;
                 initApp();
-            } else {
-                alert(res.message);
-            }
-        } catch (err) {
-            alert("Koneksi gagal: " + err.message);
-        } finally {
-            showLoader(false);
-        }
+            } else { alert(res.message); }
+        } catch (err) { alert("Koneksi gagal."); } finally { showLoader(false); }
     }
 
     function initApp() {
-      document.getElementById('login-page').style.display = 'none';
-      document.getElementById('app-page').style.display = 'block';
-      document.getElementById('userNama').innerText = currentUser.nama;
-      document.getElementById('userRole').innerText = currentUser.role.toUpperCase();
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('app-page').style.display = 'block';
+        document.getElementById('dispNamaUser').innerText = currentUser.nama;
+        document.getElementById('badgeRole').innerText = currentUser.role.toUpperCase();
 
-      if (currentUser.role === 'admin' || currentUser.role === 'superadmin') {
-        document.getElementById('menu-warga').style.display = 'flex';
-        document.getElementById('menu-pengaturan').style.display = 'flex';
-      }
-      showMenu('dashboard');
+        // LOGIC PERBEDAAN ROLE
+        if (currentUser.role === 'admin' || currentUser.role === 'superadmin') {
+            document.getElementById('nav-warga').style.display = 'flex';
+        }
+        
+        // Cuma Superadmin yang bisa lihat menu Pengaturan
+        if (currentUser.role === 'superadmin') {
+            document.getElementById('nav-pengaturan').style.display = 'flex';
+        }
+
+        loadDashboard();
+        showMenu('dashboard');
     }
 
     function showMenu(menuId) {
-      document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      const targetView = document.getElementById('view-' + menuId);
-      if(targetView) targetView.style.display = 'block';
-      
-      const link = Array.from(document.querySelectorAll('.nav-link')).find(a => a.getAttribute('onclick')?.includes(menuId));
-      if(link) link.classList.add('active');
+        document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.getElementById('view-' + menuId).style.display = 'block';
+        const link = document.getElementById('nav-' + menuId) || document.querySelector(`[onclick="showMenu('${menuId}')"]`);
+        if(link) link.classList.add('active');
+        if(menuId === 'warga') loadWarga();
+    }
+
+    async function loadDashboard() {
+        // Dummy data for rendering
+        const months = ['Januari','Februari','Maret','April','Mei','Juni'];
+        let html = '';
+        months.forEach(m => {
+            html += `<tr><td class="ps-4 fw-600">${m}</td><td>Rp 25.000</td><td><span class="badge bg-warning text-dark">BELUM BAYAR</span></td></tr>`;
+        });
+        document.getElementById('table-iuran-user').innerHTML = html;
+        document.getElementById('dispPengumuman').innerText = "Mohon segera melunasi iuran sampah periode Maret.";
+    }
+
+    async function loadWarga() {
+        showLoader(true);
+        try {
+            const data = await callGAS('getSemuaWarga');
+            let html = '';
+            data.forEach(d => {
+                html += `<tr>
+                    <td class="ps-3"><b>${d.nama}</b><br><small>${d.email}</small></td>
+                    <td>${d.blok}/${d.no}</td>
+                    <td><span class="badge bg-light text-dark border">${d.role.toUpperCase()}</span></td>
+                    <td><button class="btn btn-sm btn-primary" onclick="alert('Fitur Bayar Baris Ini')">Bayar</button></td>
+                </tr>`;
+            });
+            document.getElementById('table-warga').innerHTML = html;
+        } catch(e) {} finally { showLoader(false); }
     }
 
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
