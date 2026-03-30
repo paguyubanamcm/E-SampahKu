@@ -3,142 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Iuran Warga - AMC Mojosari</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>SAMPAHKU AMCM - Sistem Iuran Warga</title>
   
+  <!-- CSS Frameworks -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --primary-color: #4361ee;
-      --secondary-color: #3f37c9;
-      --accent-color: #4cc9f0;
-      --bg-light: #f8f9fa;
-      --white-solid: #ffffff;
+      --primary: #2563eb;
+      --secondary: #64748b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --background: #f1f5f9;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-light);
-      color: #333;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--background);
+      color: #1e293b;
     }
 
-    /* --- LOGIN PAGE STYLE --- */
-    #login-page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), 
-                  url('https://freedomdigital.biz.id/gambarbebas/20260328-102840_GATE%20AMC%201%20&%20AMC%202.png?auto=format&fit=crop&w=1920&q=80');
-      background-size: cover;
-      background-position: center;
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 420px;
-      background: var(--white-solid);
-      border-radius: 1.5rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
-      border: none;
-    }
-
-    .login-header {
-      padding: 3rem 2rem 1.5rem;
-      text-align: center;
-    }
-
-    .login-logo-container {
-      width: 100%;
-      margin-bottom: 1.5rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .login-logo-container img {
-      width: 100%;
-      max-width: 300px;
-      height: auto;
-    }
-
-    .login-title {
-      color: var(--primary-color);
-      font-weight: 800;
-      font-size: 1.5rem;
-      margin-bottom: 0.2rem;
-      letter-spacing: -0.5px;
-    }
-
-    .login-body {
-      padding: 0 2.5rem 3rem;
-    }
-
-    .form-label-custom {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #666;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    .input-group-custom {
-      background-color: #f1f3f5;
-      border-radius: 0.75rem;
-      display: flex;
-      align-items: center;
-      padding: 0.2rem 1rem;
-      margin-bottom: 1.25rem;
-      border: 2px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .input-group-custom:focus-within {
-      border-color: var(--primary-color);
-      background-color: #fff;
-    }
-
-    .input-group-custom i {
-      color: #adb5bd;
-      margin-right: 0.75rem;
-    }
-
-    .input-group-custom input {
-      border: none;
-      background: transparent;
-      padding: 0.75rem 0;
-      width: 100%;
-      outline: none;
-      font-weight: 500;
-    }
-
-    .btn-login {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      width: 100%;
-      padding: 1rem;
-      border-radius: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-      transition: all 0.3s;
-    }
-
-    .btn-login:hover {
-      background: var(--secondary-color);
-      transform: translateY(-2px);
-    }
-
-    /* --- DASHBOARD STYLE --- */
+    /* Overlay Loader */
     #loader-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
       z-index: 9999;
       display: none;
       flex-direction: column;
@@ -146,425 +39,296 @@
       justify-content: center;
     }
 
+    /* Login Screen */
+    #login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                  url('https://freedomdigital.biz.id/gambarbebas/20260328-102840_GATE%20AMC%201%20&%20AMC%202.png');
+      background-size: cover;
+      background-position: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Custom Style untuk Judul Gemuk */
+    .brand-title {
+      font-weight: 900; /* Paling tebal */
+      letter-spacing: -1px;
+      text-transform: uppercase;
+    }
+
+    /* App Layout */
+    .sidebar {
+      background: white;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      border-right: 1px solid #e2e8f0;
+      padding: 24px;
+    }
+
     .nav-link {
-      color: #444;
+      color: var(--secondary);
       font-weight: 600;
-      padding: 0.8rem 1.2rem;
-      border-radius: 0.75rem;
-      margin-bottom: 0.3rem;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: #f8fafc;
+      color: var(--primary);
     }
 
     .nav-link.active {
-      background-color: var(--primary-color) !important;
+      background: var(--primary);
       color: white !important;
     }
 
-    .card-stat {
+    .card {
       border: none;
-      border-radius: 1rem;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th {
+      background: #f8fafc;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      padding: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { height: auto; position: relative; border-right: none; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Loading Overlay -->
   <div id="loader-overlay">
-    <div class="spinner-border text-primary mb-2" role="status"></div>
-    <div class="fw-bold">Sedang Memproses...</div>
+    <div class="spinner-border text-primary mb-3" role="status"></div>
+    <span class="fw-bold">Mohon Tunggu...</span>
   </div>
 
   <!-- PAGE: LOGIN -->
   <div id="login-page">
-    <div class="login-card">
-      <div class="login-header">
-        <div class="login-logo-container">
-          <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" alt="Logo Paguyuban">
+    <div class="login-card shadow-lg">
+      <div class="text-center mb-4">
+        <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" alt="Logo AMC" style="width: 120px;">
+        <!-- UPDATE: Judul Branding Lebih Tebal/Gemuk -->
+        <h2 class="mt-3 brand-title text-primary">SAMPAHKU AMCM</h2>
+        <p class="text-muted small">Kelola iuran kebersihan warga jadi lebih mudah</p>
+      </div>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Email</label>
+          <input type="email" id="loginEmail" class="form-control form-control-lg" placeholder="email@contoh.com" required>
         </div>
-        <h1 class="login-title">AHSANA MODERN CITY</h1>
-        <p class="text-muted small">Sistem Informasi Iuran Warga Digital</p>
-      </div>
-      
-      <div class="login-body">
-        <form id="loginForm" onsubmit="handleLogin(event)">
-          <label class="form-label-custom">Email / User ID</label>
-          <div class="input-group-custom">
-            <i class="fas fa-user"></i>
-            <input type="text" id="loginEmail" placeholder="nama@email.com" required>
-          </div>
-
-          <label class="form-label-custom">Kata Sandi</label>
-          <div class="input-group-custom">
-            <i class="fas fa-lock"></i>
-            <input type="password" id="loginPass" placeholder="••••••••" required>
-          </div>
-
-          <button type="submit" class="btn-login">Masuk Sekarang</button>
-        </form>
-      </div>
+        <div class="mb-4">
+          <label class="form-label small fw-bold">Password</label>
+          <input type="password" id="loginPass" class="form-control form-control-lg" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-3 shadow fw-bold">MASUK SISTEM</button>
+      </form>
     </div>
   </div>
 
   <!-- PAGE: MAIN APP -->
-  <div id="app-page" style="display:none;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-lg-none">
-      <div class="container-fluid">
-        <span class="navbar-brand fw-bold">AMC MOJOSARI</span>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-    </nav>
-
+  <div id="app-page" style="display: none;">
     <div class="container-fluid">
       <div class="row">
         <!-- SIDEBAR -->
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-white sidebar collapse min-vh-100 p-3 shadow-sm">
-          <div class="text-center d-none d-lg-block mb-4 pt-3">
-            <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" class="mb-2" style="width: 130px;">
-            <p class="fw-bold text-primary small">DASHBOARD WARGA</p>
-            <hr>
+        <div class="col-md-3 col-lg-2 sidebar">
+          <div class="d-flex align-items-center mb-5 gap-2">
+             <img src="https://freedomdigital.biz.id/gambarbebas/20260311-014657_Paguyuban_Ahsana_Modern_City_Mojosari.png" style="width: 40px;">
+             <span class="brand-title fs-5 text-primary">SAMPAHKU</span>
           </div>
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" id="nav-dashboard" href="#" onclick="showSection('dashboard')">
-                <i class="fas fa-home me-2"></i> Dashboard
-              </a>
-            </li>
-            <li class="nav-item" id="menu-warga" style="display:none;">
-              <a class="nav-link" href="#" onclick="showSection('warga')">
-                <i class="fas fa-users me-2"></i> Data Warga
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" onclick="showSection('profil')">
-                <i class="fas fa-user-circle me-2"></i> Profil Saya
-              </a>
-            </li>
-            <li class="nav-item mt-4">
-              <a class="nav-link text-danger fw-bold" href="#" onclick="location.reload()">
-                <i class="fas fa-sign-out-alt me-2"></i> Keluar
-              </a>
-            </li>
-          </ul>
-        </nav>
+          <nav class="nav flex-column" id="main-nav">
+            <a class="nav-link active" onclick="showMenu('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a class="nav-link" id="menu-warga" onclick="showMenu('warga')" style="display: none;"><i class="fas fa-users"></i> Data Warga</a>
+            <a class="nav-link" id="menu-pengaturan" onclick="showMenu('pengaturan')" style="display: none;"><i class="fas fa-cog"></i> Pengaturan</a>
+            <a class="nav-link" onclick="logout()"><i class="fas fa-sign-out-alt text-danger"></i> Keluar</a>
+          </nav>
+        </div>
 
-        <!-- MAIN CONTENT -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4">
-          <div id="section-dashboard" class="content-section">
+        <!-- CONTENT -->
+        <div class="col-md-9 col-lg-10 p-4">
+          <!-- View: Dashboard -->
+          <div id="view-dashboard" class="view-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
-               <h2 class="fw-bold">Ringkasan Akun</h2>
-               <div class="text-end">
-                  <div id="userNameDisp" class="fw-bold text-primary">...</div>
-                  <div id="userRoleDisp" class="badge bg-light text-primary border border-primary">Role</div>
-               </div>
+              <h3 class="fw-800">Halo, <span id="userNama" class="text-primary">Warga</span>!</h3>
+              <div class="badge bg-white text-dark p-2 border shadow-sm">
+                <i class="fas fa-user-tag me-1 text-primary"></i> <span id="userRole">Warga</span>
+              </div>
             </div>
 
-            <!-- INFO CARD -->
-            <div class="row g-3 mb-4">
-               <div class="col-md-8">
-                  <div class="card p-4 text-white border-0" style="background: linear-gradient(45deg, #4361ee, #4cc9f0); border-radius: 1.2rem;">
-                     <h6 class="fw-bold opacity-75 mb-2">PENGUMUMAN TERBARU</h6>
-                     <p id="infoPengumuman" class="h5 mb-0 fw-bold">Memuat pengumuman...</p>
+            <div class="row mb-4">
+              <div class="col-md-4 mb-3">
+                <div class="card p-4">
+                  <small class="text-muted fw-bold">STATUS TAHUN INI</small>
+                  <h2 class="fw-800 mb-0 text-success" id="dispStatusTahun">LUNAS</h2>
+                </div>
+              </div>
+              <div class="col-md-8 mb-3">
+                <div class="card p-4 bg-primary text-white">
+                  <div class="d-flex align-items-center gap-3">
+                    <i class="fas fa-bullhorn fs-1"></i>
+                    <div>
+                      <small class="fw-bold opacity-75">PENGUMUMAN TERBARU</small>
+                      <p id="dispPengumuman" class="mb-0 fw-600">Memuat pengumuman...</p>
+                    </div>
                   </div>
-               </div>
-               <div class="col-md-4">
-                  <div class="card p-4 h-100 border-0 shadow-sm" style="border-radius: 1.2rem;">
-                     <h6 class="text-muted small fw-bold mb-1">TARIF IURAN BULANAN</h6>
-                     <h2 id="infoBiaya" class="fw-bold text-primary">Rp 0</h2>
-                  </div>
-               </div>
+                </div>
+              </div>
             </div>
 
-            <!-- TABEL IURAN -->
-            <div class="card border-0 shadow-sm mb-5" style="border-radius: 1rem; overflow: hidden;">
-              <div class="card-header bg-white py-3">
-                <h6 class="mb-0 fw-bold text-dark"><i class="fas fa-list me-2"></i>Data Tagihan Tahun <span id="labelTahun">...</span></h6>
+            <div class="card overflow-hidden">
+              <div class="card-header bg-white py-3 border-0">
+                <h5 class="mb-0 fw-800"><i class="fas fa-receipt me-2 text-primary"></i>Riwayat Iuran <span id="dispTahunSekarang">2024</span></h5>
               </div>
               <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                  <thead class="bg-light">
+                <table class="table align-middle mb-0">
+                  <thead>
                     <tr>
                       <th class="ps-4">Bulan</th>
-                      <th>Nominal</th>
-                      <th class="text-center">Status</th>
-                      <th class="text-center">Tindakan</th>
+                      <th>Tagihan</th>
+                      <th>Status</th>
+                      <th class="text-center">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody id="table-iuran-body"></tbody>
+                  <tbody id="table-iuran-user"></tbody>
                 </table>
               </div>
             </div>
           </div>
-
-          <div id="section-warga" class="content-section" style="display:none;">
-             <h3 class="fw-bold mb-4">Manajemen Data Warga</h3>
-             <div class="card border-0 shadow-sm">
-                <div class="table-responsive">
-                   <table class="table table-hover">
-                      <thead><tr><th>Nama</th><th>Blok/No</th><th>Role</th></tr></thead>
-                      <tbody id="table-warga-body"></tbody>
-                   </table>
-                </div>
-             </div>
-          </div>
-
-          <div id="section-profil" class="content-section" style="display:none;">
-             <h3 class="fw-bold mb-4">Profil Saya</h3>
-             <div class="card p-4 border-0 shadow-sm" style="max-width: 500px;">
-                <form id="profileForm" onsubmit="handleUpdateProfile(event)">
-                   <div class="mb-3"><label class="form-label">Nama Lengkap</label><input type="text" id="profNama" class="form-control" required></div>
-                   <div class="mb-3"><label class="form-label">Email</label><input type="email" id="profEmail" class="form-control" required></div>
-                   <div class="mb-3"><label class="form-label">No. WhatsApp</label><input type="text" id="profWa" class="form-control" required></div>
-                   <button type="submit" class="btn btn-primary w-100 mt-3">Simpan Perubahan</button>
-                </form>
-             </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL BAYAR -->
-  <div class="modal fade" id="modalBayar" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0">
-        <form id="formBayar" onsubmit="handleSimpanBayar(event)">
-          <div class="modal-header bg-light">
-            <h5 class="fw-bold">Bayar Iuran</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body p-4">
-            <div class="mb-3"><label class="form-label-custom">Bulan Mulai</label><input type="text" id="mBulan" class="form-control bg-light" readonly></div>
-            <div class="mb-3">
-               <label class="form-label-custom">Bayar Sampai Bulan</label>
-               <select id="pilihanSampai" class="form-select" onchange="hitungTotal()"></select>
+          
+          <!-- View: Data Warga (Admin) -->
+          <div id="view-warga" class="view-section" style="display: none;">
+            <!-- Tabel Data Warga sesuai logic_part_2 -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h3 class="fw-800">Data Warga</h3>
             </div>
-            <div class="alert alert-primary text-center p-3 mb-4 rounded-4">
-               <div class="small fw-bold opacity-75">TOTAL TRANSFER</div>
-               <h3 id="totalBayar" class="fw-bold mb-0">Rp 0</h3>
-            </div>
-            <div class="mb-0">
-               <label class="form-label-custom">Bukti Transfer (Image)</label>
-               <input type="file" id="fileBukti" class="form-control" accept="image/*" required>
+            <div class="card">
+              <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th class="ps-3">Profil</th>
+                      <th>Rumah</th>
+                      <th>WA</th>
+                      <th>Role</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-warga"></tbody>
+                </table>
+              </div>
             </div>
           </div>
-          <div class="modal-footer border-0">
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">KIRIM BUKTI</button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    /**
-     * CONFIGURASI HOSTING VERCEL
-     */
+    // SISIPAN BRIDGE UNTUK VERCEL/GAS
     const CONFIG = {
-      // 1. GANTI URL INI dengan URL Deployment Google Apps Script lo
-      gasUrl: "https://script.google.com/macros/s/AKfycbxvZbpOkfZbaSZahn7eRQg5Mpbynj4qpenIzdopoFIT0LLHbJZkMJVa8LMK2K6n9TTOtw/exec",
-      isHosting: window.location.hostname !== 'script.google.com'
+        gasUrl: "MASUKKAN_URL_WEB_APP_GAS_LO_DISINI",
+        isHosting: window.location.hostname !== 'script.google.com' 
     };
 
-    /**
-     * Bridge Function: callGAS
-     * Memungkinkan aplikasi berjalan baik di Google iFrame maupun Vercel
-     */
     async function callGAS(funcName, ...args) {
-      if (!CONFIG.isHosting) {
-        return new Promise((resolve, reject) => {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)[funcName](...args);
-        });
-      } else {
-        try {
-          const response = await fetch(CONFIG.gasUrl, {
-            method: 'POST',
-            body: JSON.stringify({ functionName: funcName, parameters: args })
-          });
-          if (!response.ok) throw new Error("Gagal terhubung ke server backend.");
-          return await response.json();
-        } catch (error) {
-          console.error("GAS Bridge Error:", error);
-          throw error;
+        if (!CONFIG.isHosting) {
+            return new Promise((resolve, reject) => {
+                google.script.run
+                    .withSuccessHandler(resolve)
+                    .withFailureHandler(reject)[funcName](...args);
+            });
+        } else {
+            try {
+                const response = await fetch(CONFIG.gasUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({ functionName: funcName, parameters: args })
+                });
+                return await response.json();
+            } catch (error) {
+                console.error("GAS Bridge Error:", error);
+                throw error;
+            }
         }
-      }
     }
 
-    let userData = null;
-    let globalBiaya = 30000;
-    let tagihanList = [];
+    let currentUser = null;
 
-    function showLoader(v) { document.getElementById('loader-overlay').style.display = v ? 'flex' : 'none'; }
+    function showLoader(show) { document.getElementById('loader-overlay').style.display = show ? 'flex' : 'none'; }
+    function logout() { location.reload(); }
 
-    // LOGIN PROCESS - Updated to use callGAS
     async function handleLogin(e) {
-      e.preventDefault();
-      showLoader(true);
-      const email = document.getElementById('loginEmail').value;
-      const pass = document.getElementById('loginPass').value;
-      
-      try {
-        const res = await callGAS('prosesLogin', email, pass);
-        showLoader(false);
-        if (res.status === 'success') {
-          userData = res.user;
-          globalBiaya = parseInt(res.biaya);
-          document.getElementById('infoPengumuman').innerText = res.pengumuman || "Tidak ada pengumuman hari ini.";
-          initApp();
-        } else {
-          alert(res.message);
+        e.preventDefault();
+        showLoader(true);
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+
+        try {
+            const res = await callGAS('prosesLogin', email, pass); 
+            if (res.status === 'success') {
+                currentUser = res.user;
+                initApp();
+            } else {
+                alert(res.message);
+            }
+        } catch (err) {
+            alert("Koneksi gagal: " + err.message);
+        } finally {
+            showLoader(false);
         }
-      } catch (err) {
-        showLoader(false);
-        alert("Kesalahan Login: " + err.message);
-      }
     }
 
     function initApp() {
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('app-page').style.display = 'block';
-      document.getElementById('userNameDisp').innerText = userData.nama;
-      document.getElementById('userRoleDisp').innerText = userData.role.toUpperCase();
-      document.getElementById('infoBiaya').innerText = "Rp " + globalBiaya.toLocaleString();
-      
-      if(userData.role !== 'warga') document.getElementById('menu-warga').style.display = 'block';
-      
-      document.getElementById('profNama').value = userData.nama;
-      document.getElementById('profEmail').value = userData.email;
-      document.getElementById('profWa').value = userData.no_wa;
+      document.getElementById('userNama').innerText = currentUser.nama;
+      document.getElementById('userRole').innerText = currentUser.role.toUpperCase();
 
-      loadDashboard();
+      if (currentUser.role === 'admin' || currentUser.role === 'superadmin') {
+        document.getElementById('menu-warga').style.display = 'flex';
+        document.getElementById('menu-pengaturan').style.display = 'flex';
+      }
+      showMenu('dashboard');
     }
 
-    function showSection(id) {
-      document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+    function showMenu(menuId) {
+      document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      document.getElementById('section-' + id).style.display = 'block';
-      document.getElementById('nav-' + id)?.classList.add('active');
-      if(id === 'warga') loadWarga();
-    }
-
-    // DASHBOARD DATA - Updated to use callGAS
-    async function loadDashboard() {
-      showLoader(true);
-      try {
-        const res = await callGAS('getDashboardData', userData.role, userData.id);
-        showLoader(false);
-        tagihanList = res.tagihan_warga;
-        document.getElementById('labelTahun').innerText = new Date().getFullYear();
-        renderTable();
-      } catch (err) {
-        showLoader(false);
-        console.error(err);
-      }
-    }
-
-    function renderTable() {
-      const tbody = document.getElementById('table-iuran-body');
-      tbody.innerHTML = "";
-      tagihanList.forEach((t, idx) => {
-        let badge = `<span class="badge bg-danger">Belum Bayar</span>`;
-        if(t.status === 'Lunas') badge = `<span class="badge bg-success">Lunas</span>`;
-        else if(t.status === 'Menunggu') badge = `<span class="badge bg-warning text-dark">Menunggu ACC</span>`;
-        
-        let btn = (t.status === 'Belum Bayar') ? 
-          `<button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openBayar(${idx})">Bayar</button>` : 
-          `<button class="btn btn-sm btn-light border rounded-pill px-3" disabled><i class="fas fa-check"></i></button>`;
-
-        tbody.innerHTML += `
-          <tr>
-            <td class="ps-4 fw-bold">${t.bulan}</td>
-            <td>Rp ${t.nominal.toLocaleString()}</td>
-            <td class="text-center">${badge}</td>
-            <td class="text-center">${btn}</td>
-          </tr>
-        `;
-      });
-    }
-
-    let currentStartIdx = 0;
-    function openBayar(idx) {
-      currentStartIdx = idx;
-      document.getElementById('mBulan').value = tagihanList[idx].bulan;
+      const targetView = document.getElementById('view-' + menuId);
+      if(targetView) targetView.style.display = 'block';
       
-      const sel = document.getElementById('pilihanSampai');
-      sel.innerHTML = "";
-      for(let i = idx; i < tagihanList.length; i++) {
-        sel.innerHTML += `<option value="${i}">${tagihanList[i].bulan}</option>`;
-      }
-      
-      hitungTotal();
-      new bootstrap.Modal(document.getElementById('modalBayar')).show();
+      const link = Array.from(document.querySelectorAll('.nav-link')).find(a => a.getAttribute('onclick')?.includes(menuId));
+      if(link) link.classList.add('active');
     }
 
-    function hitungTotal() {
-      const endIdx = parseInt(document.getElementById('pilihanSampai').value);
-      const jml = (endIdx - currentStartIdx) + 1;
-      document.getElementById('totalBayar').innerText = "Rp " + (jml * globalBiaya).toLocaleString();
-    }
-
-    // SAVE PAYMENT - Updated to use callGAS
-    function handleSimpanBayar(e) {
-      e.preventDefault();
-      showLoader(true);
-      const endIdx = parseInt(document.getElementById('pilihanSampai').value);
-      const listBulan = [];
-      for(let i = currentStartIdx; i <= endIdx; i++) listBulan.push(tagihanList[i].bulan);
-
-      const file = document.getElementById('fileBukti').files[0];
-      const reader = new FileReader();
-      reader.onload = async function(evt) {
-        try {
-          const msg = await callGAS('simpanPembayaranMulti', userData.id, listBulan, new Date().getFullYear(), globalBiaya, evt.target.result);
-          showLoader(false);
-          alert(msg);
-          bootstrap.Modal.getInstance(document.getElementById('modalBayar')).hide();
-          loadDashboard();
-        } catch (err) {
-          showLoader(false);
-          alert("Gagal kirim bukti: " + err.message);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // LOAD RESIDENTS - Updated to use callGAS
-    async function loadWarga() {
-      try {
-        const data = await callGAS('getSemuaWarga');
-        const tbody = document.getElementById('table-warga-body');
-        tbody.innerHTML = "";
-        data.forEach(w => {
-           tbody.innerHTML += `<tr><td>${w.nama}</td><td>${w.blok}/${w.no}</td><td>${w.role}</td></tr>`;
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    // UPDATE PROFILE - Updated to use callGAS
-    async function handleUpdateProfile(e) {
-      e.preventDefault();
-      showLoader(true);
-      const n = document.getElementById('profNama').value;
-      const m = document.getElementById('profEmail').value;
-      const w = document.getElementById('profWa').value;
-      
-      try {
-        const res = await callGAS('updateProfil', userData.id, m, n, userData.blok, userData.no_rumah, w, "", "");
-        showLoader(false);
-        if(res.status === 'success') {
-          alert("Profil diperbarui!");
-          userData = res.user;
-          initApp();
-        }
-      } catch (err) {
-        showLoader(false);
-        alert("Gagal update profil.");
-      }
-    }
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
   </script>
 </body>
 </html>
